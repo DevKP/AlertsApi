@@ -7,19 +7,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var host = Host.CreateDefaultBuilder(args);
-host.ConfigureServices(ServicesConfiguration);
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((hostBuilder, services) =>
+    {
+        services.AddDbContext<AlertDbContext>(contextOptionsBuilder =>
+        {
+            var connection = hostBuilder.Configuration.GetConnectionString("NpgsqlConnection");
+            contextOptionsBuilder.UseNpgsql(connection);
+        });
+        services.AddTransient<IAlertRepository, AlertRepository>();
+        services.AddHostedService<TgFetcherService>();
+    });
 
 using var app = host.Build();
 await app.RunAsync();
-
-void ServicesConfiguration(HostBuilderContext hostBuilder, IServiceCollection services)
-{
-    services.AddDbContext<AlertDbContext>(contextOptionsBuilder =>
-    {
-        var connection = hostBuilder.Configuration.GetConnectionString("DefaultConnection");
-        contextOptionsBuilder.UseSqlServer(connection);
-    });
-    services.AddTransient<IAlertRepository, AlertRepository>();
-    services.AddHostedService<TgFetcherService>();
-}

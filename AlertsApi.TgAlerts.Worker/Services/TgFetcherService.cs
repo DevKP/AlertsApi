@@ -19,7 +19,6 @@ public class TgFetcherService : BackgroundService
     {
         _alertRepository = alertRepository;
         _tgAlarmParser = new TgAlarmParser(ChannelName);
-        _tgAlarmParser.OnUpdates += OnUpdates;
 
         Console.OutputEncoding = Encoding.UTF8;
     }
@@ -47,20 +46,22 @@ public class TgFetcherService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var history = _tgAlarmParser.GetHistoryAsync(TimeSpan.FromDays(1));
+        var history = _tgAlarmParser.GetHistoryAsync(TimeSpan.FromDays(2));
         await foreach (var item in history)
         {
             var duration = DateTime.Now - item.FetchedAt;
-            if (duration > TimeSpan.FromHours(2))
+            if (duration > TimeSpan.FromHours(3))
                 item.Active = false;
 
             var dbAlert = await _alertRepository.GetAlertByLocationAsync(item.LocationTitle!);
-            if (dbAlert is not null && dbAlert.UpdateTime < item.FetchedAt)
+            if (dbAlert is null || dbAlert.UpdateTime < item.FetchedAt)
             {
                 await _alertRepository.UpdateAlertAsync(new Alert
                     { LocationName = item.LocationTitle, Active = item.Active, UpdateTime = item.FetchedAt });
             }
         }
+
+        _tgAlarmParser.OnUpdates += OnUpdates;
 
         Console.ReadLine();
     }
