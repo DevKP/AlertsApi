@@ -25,4 +25,4 @@ jobs:
       run: docker build . --file Dockerfile --tag $REPO_NAME:latest
 
     - name: Docker Push
-      run: docker push $DOCKER_USER/$REPO_NAME:latest
+      run: docker push $REPO_NAME:latest

@@ -22,7 +22,7 @@ jobs:
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
     
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag alertsapi:latest
+      run: docker build . --file Dockerfile --tag $REPO_NAME:latest
 
     - name: Docker Push
-      run: docker push $DOCKER_USER/alertsapi:latest
+      run: docker push $DOCKER_USER/$REPO_NAME:latest
