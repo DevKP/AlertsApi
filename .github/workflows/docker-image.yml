@@ -5,7 +5,10 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  REPO_NAME: ${{secrets.REPO_NAME}}
 jobs:
 
   build:
@@ -14,5 +17,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: docker login
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+    
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag alertsapi:latest
+
+    - name: Docker Push
+      run: docker push $DOCKER_USER/alertsapi:latest
