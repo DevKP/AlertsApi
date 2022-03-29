@@ -13,7 +13,7 @@ builder.Host.UseSerilog((_, configuration) => configuration
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .WriteTo.Console()
-    .WriteTo.Seq("http://142.93.128.30/")   
+    .WriteTo.Seq("http://localhost:8081/")
 );
 
 //Seq token ksbsVPaSniW4uTygTJFU
