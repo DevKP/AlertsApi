@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.Api", "AlertsApi\AlertsApi.Api.csproj", "{744FC7A2-90FD-4F53-90B8-05C75EF0467F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.Domain", "AlertsApi.Domain\AlertsApi.Domain.csproj", "{32F9C1B7-4AF0-47DC-8318-06391912E51D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.Infrastructure", "AlertsApi.Infrastructure\AlertsApi.Infrastructure.csproj", "{E5F47A13-89C6-4BCA-B79D-5149D5C21223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.TgAlertsFramework", "AlertsApi.TgAlertsFetcher\AlertsApi.TgAlertsFramework.csproj", "{CD894747-7610-4986-980F-4E1CD1EC26F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.TgAlerts.Console", "AlertsApi.TgAlertsFetcher.Console\AlertsApi.TgAlerts.Console.csproj", "{C408C3CF-9C20-4EA8-A8EE-F581FC5ED92A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.TgAlerts.Worker", "AlertsApi.TgAlerts.Worker\AlertsApi.TgAlerts.Worker.csproj", "{42819E74-12C8-40DA-BD74-E7B5218DEC5B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{744FC7A2-90FD-4F53-90B8-05C75EF0467F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744FC7A2-90FD-4F53-90B8-05C75EF0467F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744FC7A2-90FD-4F53-90B8-05C75EF0467F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744FC7A2-90FD-4F53-90B8-05C75EF0467F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32F9C1B7-4AF0-47DC-8318-06391912E51D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32F9C1B7-4AF0-47DC-8318-06391912E51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32F9C1B7-4AF0-47DC-8318-06391912E51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32F9C1B7-4AF0-47DC-8318-06391912E51D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5F47A13-89C6-4BCA-B79D-5149D5C21223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5F47A13-89C6-4BCA-B79D-5149D5C21223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5F47A13-89C6-4BCA-B79D-5149D5C21223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5F47A13-89C6-4BCA-B79D-5149D5C21223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD894747-7610-4986-980F-4E1CD1EC26F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD894747-7610-4986-980F-4E1CD1EC26F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD894747-7610-4986-980F-4E1CD1EC26F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD894747-7610-4986-980F-4E1CD1EC26F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C408C3CF-9C20-4EA8-A8EE-F581FC5ED92A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C408C3CF-9C20-4EA8-A8EE-F581FC5ED92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C408C3CF-9C20-4EA8-A8EE-F581FC5ED92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C408C3CF-9C20-4EA8-A8EE-F581FC5ED92A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42819E74-12C8-40DA-BD74-E7B5218DEC5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42819E74-12C8-40DA-BD74-E7B5218DEC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42819E74-12C8-40DA-BD74-E7B5218DEC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42819E74-12C8-40DA-BD74-E7B5218DEC5B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28D6003A-3B05-4F6A-BAA2-176FA68ED892}
+	EndGlobalSection
+EndGlobal
