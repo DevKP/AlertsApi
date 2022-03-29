@@ -1,0 +1,5 @@
+name: 'AlertsApi Deploy'
+description: 'Api project deploy'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
