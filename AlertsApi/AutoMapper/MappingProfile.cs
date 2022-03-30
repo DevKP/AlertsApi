@@ -10,7 +10,8 @@ namespace AlertsApi.Api.AutoMapper
         {
             CreateMap<Alert, AlertResponse>()
                 .ForMember(dest => dest.LocationTitle, opt => opt.MapFrom(src => src.LocationName))
-                .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => src.UpdateTime));
+                .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => src.UpdateTime))
+                .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
 
             CreateMap<IEnumerable<Alert>, AlertsResponse>()
                 .ForMember(dest => dest.Alerts, opt => opt.MapFrom(src => src.ToList()));
