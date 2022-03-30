@@ -1,9 +1,12 @@
 ﻿using System.Text;
 using AlertsApi.Domain.Entities;
+using AlertsApi.Domain.Options;
 using AlertsApi.Domain.Repositories;
 using AlertsApi.TgAlertsFramework;
 using AlertsApi.TgAlertsFramework.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AlertsApi.TgAlerts.Worker.Services;
 
@@ -13,17 +16,36 @@ public class TgFetcherService : BackgroundService
     private const string TestChannelName = "testalertstest";
 
     private readonly IAlertRepository _alertRepository;
+    private readonly ILogger _logger;
     private readonly TgAlarmParser _tgAlarmParser;
 
-    public TgFetcherService(IAlertRepository alertRepository)
+    public TgFetcherService(IAlertRepository alertRepository, IOptions<TgAlarmOptions> options, ILogger<TgFetcherService> logger)
     {
-        _alertRepository = alertRepository;
-        _tgAlarmParser = new TgAlarmParser(ChannelName);
+        ArgumentNullException.ThrowIfNull(alertRepository, nameof(alertRepository));
+        ArgumentNullException.ThrowIfNull(options, nameof(options));
 
+        var tgOptions = options.Value;
+
+        _alertRepository = alertRepository;
+        _logger = logger;
+
+        try
+        {
+            TgAlarmParser.Log = (_, message) => _logger.LogInformation(message);
+            _tgAlarmParser =
+                new TgAlarmParser(tgOptions.ChannelName!, tgOptions.PhoneNumber!, tgOptions.SessionStorePath!);
+        }
+        catch (Exception)
+        {
+            logger.LogError("Failed to initialize telegram client! Channel: {Channel}, Number: {Phone}, StorePath: {Store}",
+                tgOptions.ChannelName, tgOptions.PhoneNumber, tgOptions.SessionStorePath);
+            throw;
+        }
+        
         Console.OutputEncoding = Encoding.UTF8;
     }
 
-    private async void OnUpdates(IEnumerable<TgAlert> obj)
+    private async Task OnUpdates(IEnumerable<TgAlert> obj)
     {
         foreach (var tgAlert in obj)
         {
@@ -46,8 +68,8 @@ public class TgFetcherService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var history = _tgAlarmParser.GetHistoryAsync(TimeSpan.FromDays(2));
-        await foreach (var item in history)
+        var history = await _tgAlarmParser.GetHistoryAsync(TimeSpan.FromDays(2));
+        foreach (var item in history)
         {
             var duration = DateTime.Now - item.FetchedAt;
             if (duration > TimeSpan.FromHours(3))
@@ -61,7 +83,7 @@ public class TgFetcherService : BackgroundService
             }
         }
 
-        _tgAlarmParser.OnUpdates += OnUpdates;
+        _tgAlarmParser.OnUpdates += async obj => await OnUpdates(obj);
 
         Console.ReadLine();
     }

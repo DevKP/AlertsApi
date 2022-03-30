@@ -12,11 +12,23 @@ public class TgAlarmParser
     private readonly InputPeerChannel _channel;
     private readonly Regex _regionRegex = new("(?<location>[\\s\\w]+([\\s\\w\\.-]+)?)\\n", RegexOptions.Compiled | RegexOptions.Singleline);
 
-    public Action<IEnumerable<TgAlert>>? OnUpdates;
-
-    public TgAlarmParser(string channelName)
+    public Func<IEnumerable<TgAlert>, Task>? OnUpdates;
+    public static Action<int, string> Log
     {
-        _client = new Client(ClientConfig.ConfigsProvider);
+        get => Helpers.Log;
+        set => Helpers.Log = value;
+    }
+
+    public TgAlarmParser(string channelName, string phoneNumber, string? sessionPath = null)
+    {
+        var sessionStore = OpenFileStream(sessionPath);
+
+        var configs = new ClientConfig
+        {
+            PhoneNumber = phoneNumber
+        };
+
+        _client = new Client(configs.ConfigsProvider, sessionStore);
         _client.LoginUserIfNeeded();
 
         _client.Update += ClientOnUpdate;
@@ -27,13 +39,24 @@ public class TgAlarmParser
             .GetResult();
 
         _channel = resolved.Chat.ToInputPeer() as InputPeerChannel
-            ?? throw new NotImplementedException();
+            ?? throw new InvalidOperationException();
     }
 
-    public async IAsyncEnumerable<TgAlert> GetHistoryAsync(TimeSpan period)
+    private static FileStream? OpenFileStream(string? sessionPath)
+    {
+        if (sessionPath is null)
+            return null;
+
+        return File.Open(sessionPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+    }
+
+    public async Task<IEnumerable<TgAlert>> GetHistoryAsync(TimeSpan period)
     {
         var until = DateTime.Now - period;
         var offset = 0;
+
+        var alerts = new List<TgAlert>();
+
         do
         {
             var messagesChunk = await _client.Messages_GetHistory(_channel, add_offset: offset, limit: 10);
@@ -50,13 +73,12 @@ public class TgAlarmParser
 
             offset += 10;
 
-            foreach (var alert in ParseMessages(messages))
-            {
-                yield return alert;
-            }
+            alerts.AddRange(ParseMessages(messages));
 
             await Task.Delay(100);
         } while (true);
+
+        return alerts;
     }
 
     private TgAlert ParseMessage(Message message)
@@ -109,6 +131,9 @@ public class TgAlarmParser
             .Select(update => update.message)
             .Cast<Message>();
         
-        OnUpdates?.Invoke(ParseMessages(messages));
+        OnUpdates?.Invoke(ParseMessages(messages))
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
     }
 }

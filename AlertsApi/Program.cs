@@ -1,6 +1,7 @@
 using AlertsApi.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using AlertsApi.Api.AutoMapper;
+using AlertsApi.Domain.Options;
 using AlertsApi.Domain.Repositories;
 using AlertsApi.Infrastructure.Repositories;
 using Serilog;
@@ -9,12 +10,15 @@ using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((_, configuration) => configuration
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .WriteTo.Console()
-    .WriteTo.Seq("http://localhost:8081/")
-);
+builder.Host.UseSerilog((host, configuration) =>
+{
+    var seqOptions = host.Configuration.GetSection(SeqOptions.ConfigKey).Get<SeqOptions>();
+    configuration
+        .MinimumLevel.Information()
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+        .WriteTo.Console()
+        .WriteTo.Seq(seqOptions.ServerUrl!, apiKey: seqOptions.ApiKey);
+});
 
 //Seq token ksbsVPaSniW4uTygTJFU
 

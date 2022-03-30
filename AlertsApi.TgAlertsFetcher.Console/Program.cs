@@ -4,18 +4,20 @@ using AlertsApi.TgAlertsFramework.Models;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-var parser = new TgAlarmParser("testalertstest");
-parser.OnUpdates += alertsUpdates =>
+var parser = new TgAlarmParser("testalertstest", "+380995031137");
+parser.OnUpdates += async alertsUpdates =>
 {
     foreach (var alert in alertsUpdates)
     {
         ShowAlert(alert);
     }
+
+    await Task.CompletedTask;
 };
 
-var alerts = parser.GetHistoryAsync(TimeSpan.FromHours(5));
+var alerts = await parser.GetHistoryAsync(TimeSpan.FromHours(5));
 
-await foreach (var alert in alerts)
+foreach (var alert in alerts)
 {
     ShowAlert(alert);
 }
