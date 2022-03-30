@@ -11,15 +11,14 @@ using Microsoft.Extensions.Options;
 namespace AlertsApi.TgAlerts.Worker.Services;
 
 public class TgFetcherService : BackgroundService
-{
-    private const string ChannelName = "UkraineAlarmSignal";
-    private const string TestChannelName = "testalertstest";
-
+{ 
     private readonly IAlertRepository _alertRepository;
+    private readonly IMessageRepository _messageRepository;
     private readonly ILogger _logger;
     private readonly TgAlarmParser _tgAlarmParser;
 
-    public TgFetcherService(IAlertRepository alertRepository, IOptions<TgAlarmOptions> options, ILogger<TgFetcherService> logger)
+    public TgFetcherService(IAlertRepository alertRepository, IOptions<TgAlarmOptions> options,
+        ILogger<TgFetcherService> logger, IMessageRepository messageRepository)
     {
         ArgumentNullException.ThrowIfNull(alertRepository, nameof(alertRepository));
         ArgumentNullException.ThrowIfNull(options, nameof(options));
@@ -28,10 +27,11 @@ public class TgFetcherService : BackgroundService
 
         _alertRepository = alertRepository;
         _logger = logger;
+        _messageRepository = messageRepository;
 
         try
         {
-            TgAlarmParser.Log = (_, message) => _logger.LogInformation(message);
+            TgAlarmParser.Log = (_, message) => _logger.LogDebug(message);
             _tgAlarmParser =
                 new TgAlarmParser(tgOptions.ChannelName!, tgOptions.PhoneNumber!, tgOptions.SessionStorePath!);
         }
@@ -49,6 +49,9 @@ public class TgFetcherService : BackgroundService
     {
         foreach (var tgAlert in obj)
         {
+            _logger.LogInformation("Status update for location: {Location}. Status: {Status}",
+                tgAlert.LocationTitle, tgAlert.Active ? "Active" : "Not Active");
+
             await _alertRepository.UpdateAlertAsync(new Alert
                 { LocationName = tgAlert.LocationTitle, Active = tgAlert.Active, UpdateTime = tgAlert.FetchedAt });
 
@@ -68,12 +71,20 @@ public class TgFetcherService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var history = await _tgAlarmParser.GetHistoryAsync(TimeSpan.FromDays(2));
+        _logger.LogInformation("Start to fetching history from tg channel..");
+        var history = await _tgAlarmParser.GetHistoryAsync(TimeSpan.FromDays(1));
         foreach (var item in history)
         {
             var duration = DateTime.Now - item.FetchedAt;
             if (duration > TimeSpan.FromHours(3))
+            {
                 item.Active = false;
+            }
+            else
+            {
+                _logger.LogInformation("Found fresh status from history. Location: {Location}. Status: {Status}",
+                    item.LocationTitle, item.Active ? "Active" : "Not Active");
+            }
 
             var dbAlert = await _alertRepository.GetAlertByLocationAsync(item.LocationTitle!);
             if (dbAlert is null || dbAlert.UpdateTime < item.FetchedAt)
@@ -83,7 +94,18 @@ public class TgFetcherService : BackgroundService
             }
         }
 
+        _logger.LogInformation("Start monitoring real time updates.");
         _tgAlarmParser.OnUpdates += async obj => await OnUpdates(obj);
+        _tgAlarmParser.OnNewMessage += async messages =>
+        {
+            var messagesEntities = messages.Select(m => new MessageEntity()
+            {
+                Id = m.ID,
+                Message = m.message,
+                Date = m.Date
+            });
+            await _messageRepository.InsertRangeAsync(messagesEntities);
+        };
 
         Console.ReadLine();
     }

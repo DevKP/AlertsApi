@@ -8,11 +8,15 @@ namespace AlertsApi.TgAlertsFramework;
 
 public class TgAlarmParser
 {
+    private const string AlertOffKeyword = "🟢";
+    private const string AlertOffKeyword1 = "🟡";
+
     private readonly Client _client;
     private readonly InputPeerChannel _channel;
-    private readonly Regex _regionRegex = new("(?<location>[\\s\\w]+([\\s\\w\\.-]+)?)\\n", RegexOptions.Compiled | RegexOptions.Singleline);
+    private readonly Regex _regionRegex = new("#(?<location>[\\w_]+)", RegexOptions.Compiled | RegexOptions.Singleline);
 
     public Func<IEnumerable<TgAlert>, Task>? OnUpdates;
+    public Func<IEnumerable<Message>, Task>? OnNewMessage;
     public static Action<int, string> Log
     {
         get => Helpers.Log;
@@ -84,12 +88,12 @@ public class TgAlarmParser
     private TgAlert ParseMessage(Message message)
     {
         var match = _regionRegex.Match(message.message);
-        var location = match.Groups["location"].Value.Trim();
+        var location = match.Groups["location"].Value.Trim().Replace('_', ' ');
 
         if (string.IsNullOrWhiteSpace(location))
             throw new UnableToParseMessageException();
 
-        var alarmState = !message.message.Contains("відбій", StringComparison.OrdinalIgnoreCase);
+        var alarmState = GetAlarmState(message);
 
         var alarm = new TgAlert()
         {
@@ -99,6 +103,12 @@ public class TgAlarmParser
         };
 
         return alarm;
+    }
+
+    private static bool GetAlarmState(Message message)
+    {
+        return message.message.Contains(AlertOffKeyword, StringComparison.OrdinalIgnoreCase) != true &&
+               message.message.Contains(AlertOffKeyword1, StringComparison.OrdinalIgnoreCase) != true;
     }
 
     private IEnumerable<TgAlert> ParseMessages(IEnumerable<Message> messages)
@@ -129,9 +139,14 @@ public class TgAlarmParser
                              msg.message.Peer.ID == _channel.channel_id)
             .Cast<UpdateNewMessage>()
             .Select(update => update.message)
-            .Cast<Message>();
+            .Cast<Message>()
+            .ToList();
         
         OnUpdates?.Invoke(ParseMessages(messages))
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+        OnNewMessage?.Invoke(messages)
             .ConfigureAwait(false)
             .GetAwaiter()
             .GetResult();
