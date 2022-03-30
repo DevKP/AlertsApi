@@ -8,7 +8,8 @@ on:
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-  REPO_NAME: ${{secrets.REPO_NAME}}
+  API_REPO_NAME: ${{secrets.API_REPO_NAME}}
+  WORKER_REPO_NAME: ${{secrets.WORKER_REPO_NAME}}
 jobs:
 
   build:
@@ -21,8 +22,14 @@ jobs:
     - name: docker login
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
     
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:latest
+    - name: Build Api Image
+      run: docker build . --file Dockerfile.Api --tag $DOCKER_USER/$API_REPO_NAME:latest
 
-    - name: Docker Push
-      run: docker push $DOCKER_USER/$REPO_NAME:latest
+    - name: Push Api Image
+      run: docker push $DOCKER_USER/$API_REPO_NAME:latest
+      
+    - name: Build Worker Image
+      run: docker build . --file Dockerfile.Worker --tag $DOCKER_USER/$WORKER_REPO_NAME:latest
+
+    - name: Push Worker Image
+      run: docker push $DOCKER_USER/$WORKER_REPO_NAME:latest
