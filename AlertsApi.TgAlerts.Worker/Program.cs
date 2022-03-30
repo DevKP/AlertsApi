@@ -29,7 +29,7 @@ var host = Host.CreateDefaultBuilder(args)
             var connection = hostBuilder.Configuration.GetConnectionString("NpgsqlConnection");
             contextOptionsBuilder.UseNpgsql(connection);
         }, ServiceLifetime.Singleton);
-        services.AddTransient<IAlertRepository, AlertRepository>();
+        services.AddSingleton<IAlertRepository, AlertRepository>();
         services.AddHostedService<TgFetcherService>();
     });
 
