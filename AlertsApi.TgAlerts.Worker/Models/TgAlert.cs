@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AlertsApi.WTelegram.Hosting.Models
+namespace AlertsApi.TgAlerts.Worker.Models
 {
     public class TgAlert
     {

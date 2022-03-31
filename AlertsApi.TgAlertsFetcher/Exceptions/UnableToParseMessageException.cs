@@ -1,4 +1,4 @@
-﻿namespace AlertsApi.TgAlertsFramework.Exceptions;
+﻿namespace AlertsApi.WTelegram.Hosting.Exceptions;
 
 public class UnableToParseMessageException : Exception
 {

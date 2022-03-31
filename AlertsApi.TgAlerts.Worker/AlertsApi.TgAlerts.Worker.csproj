@@ -26,11 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
@@ -41,7 +42,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AlertsApi.Infrastructure\AlertsApi.Infrastructure.csproj" />
-    <ProjectReference Include="..\AlertsApi.TgAlertsFetcher\AlertsApi.TgAlertsFramework.csproj" />
+    <ProjectReference Include="..\AlertsApi.TgAlertsFetcher\AlertsApi.WTelegram.Hosting.csproj" />
   </ItemGroup>
 
 </Project>

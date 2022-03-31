@@ -1,6 +1,6 @@
 ﻿namespace AlertsApi.Domain.Entities;
 
-public class MessageEntity : IEntity
+public class DbMessage : IEntity
 {
     public int Id { get; set; }
 

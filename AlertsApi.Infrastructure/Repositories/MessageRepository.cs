@@ -14,37 +14,37 @@ public class MessageRepository : IMessageRepository
         _dbContext = dbContext;
     }
 
-    public async Task InsertAsync(MessageEntity message)
+    public async Task InsertAsync(DbMessage message)
     {
-        await _dbContext.Message.AddAsync(message);
+        await _dbContext.Message!.AddAsync(message);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task InsertRangeAsync(IEnumerable<MessageEntity> messages)
+    public async Task InsertRangeAsync(IEnumerable<DbMessage> messages)
     {
-        await _dbContext.Message.AddRangeAsync(messages);
+        await _dbContext.Message!.AddRangeAsync(messages);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<MessageEntity>> GetAllAsync()
+    public async Task<IEnumerable<DbMessage>> GetAllAsync()
     {
-        return await _dbContext.Message
+        return await _dbContext.Message!
             .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<MessageEntity?> GetById(int id)
+    public async Task<DbMessage?> GetById(int id)
     {
-        return await _dbContext.Message
+        return await _dbContext.Message!
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 
-    public async Task<MessageEntity?> GetLatestAsync(string location)
+    public async Task<DbMessage?> GetNewestAsync()
     {
-        return await _dbContext.Message
+        return await _dbContext.Message!
             .AsNoTracking()
             .OrderByDescending(m => m.Id)
-            .FirstAsync();
+            .FirstOrDefaultAsync();
     }
 }

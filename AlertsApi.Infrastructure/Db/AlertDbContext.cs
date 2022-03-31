@@ -7,7 +7,7 @@ namespace AlertsApi.Infrastructure.Db;
 public class AlertDbContext : DbContext
 {
     public virtual DbSet<Alert>? Alerts { get; set; }
-    public virtual DbSet<MessageEntity> Message { get; set; }
+    public virtual DbSet<DbMessage>? Message { get; set; }
 
     public AlertDbContext(DbContextOptions<AlertDbContext> options) : base(options)
     {

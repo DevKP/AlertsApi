@@ -1,4 +1,4 @@
-﻿namespace AlertsApi.TgAlertsFramework;
+﻿namespace AlertsApi.TgAlerts.Worker.Config;
 
 public class ClientConfig
 {

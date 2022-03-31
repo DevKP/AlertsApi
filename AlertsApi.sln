@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.Api", "AlertsApi\AlertsApi.Api.csproj", "{744FC7A2-90FD-4F53-90B8-05C75EF0467F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.Api", "AlertsApi\AlertsApi.Api.csproj", "{744FC7A2-90FD-4F53-90B8-05C75EF0467F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.Domain", "AlertsApi.Domain\AlertsApi.Domain.csproj", "{32F9C1B7-4AF0-47DC-8318-06391912E51D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.Domain", "AlertsApi.Domain\AlertsApi.Domain.csproj", "{32F9C1B7-4AF0-47DC-8318-06391912E51D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.Infrastructure", "AlertsApi.Infrastructure\AlertsApi.Infrastructure.csproj", "{E5F47A13-89C6-4BCA-B79D-5149D5C21223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.Infrastructure", "AlertsApi.Infrastructure\AlertsApi.Infrastructure.csproj", "{E5F47A13-89C6-4BCA-B79D-5149D5C21223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.TgAlertsFramework", "AlertsApi.TgAlertsFetcher\AlertsApi.TgAlertsFramework.csproj", "{CD894747-7610-4986-980F-4E1CD1EC26F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.WTelegram.Hosting", "AlertsApi.TgAlertsFetcher\AlertsApi.WTelegram.Hosting.csproj", "{CD894747-7610-4986-980F-4E1CD1EC26F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.TgAlerts.Console", "AlertsApi.TgAlertsFetcher.Console\AlertsApi.TgAlerts.Console.csproj", "{C408C3CF-9C20-4EA8-A8EE-F581FC5ED92A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.TgAlerts.Console", "AlertsApi.TgAlertsFetcher.Console\AlertsApi.TgAlerts.Console.csproj", "{C408C3CF-9C20-4EA8-A8EE-F581FC5ED92A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.TgAlerts.Worker", "AlertsApi.TgAlerts.Worker\AlertsApi.TgAlerts.Worker.csproj", "{42819E74-12C8-40DA-BD74-E7B5218DEC5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.TgAlerts.Worker", "AlertsApi.TgAlerts.Worker\AlertsApi.TgAlerts.Worker.csproj", "{42819E74-12C8-40DA-BD74-E7B5218DEC5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
