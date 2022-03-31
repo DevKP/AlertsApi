@@ -20,12 +20,12 @@ if (!client.IsUserAuthorized())
 }
 
 var peer = await client.SendRequestAsync<TLResolvedPeer>(new TLRequestResolveUsername() { Username = "testalertstest" });
-var channel = peer.Chats.Cast<TLChannel>().First(c => c.Id == (peer.Peer as TLPeerChannel).ChannelId);
+var channel = peer.Chats.Cast<TLChannel>().First(c => c.Id == ((peer.Peer as TLPeerChannel)!).ChannelId);
 var messages =
-    await client.GetHistoryAsync(new TLInputPeerChannel() {AccessHash = channel.AccessHash.Value, ChannelId = channel.Id},
+    await client.GetHistoryAsync(new TLInputPeerChannel() {AccessHash = channel.AccessHash!.Value, ChannelId = channel.Id},
         minId: 50);
 
-Console.WriteLine((messages as TLMessages).Messages);
+Console.WriteLine(((messages as TLMessages)!).Messages);
 
 
 

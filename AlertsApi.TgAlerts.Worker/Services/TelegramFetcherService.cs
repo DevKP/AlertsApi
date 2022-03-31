@@ -75,7 +75,7 @@ public class TelegramFetcherService : BackgroundService
 
     private async Task NewMessagesListenerAsync(IEnumerable<Message> messages)
     {
-        var filteredMessages = messages.Where(m => m.Peer.ID == _channel.channel_id).ToList();
+        var filteredMessages = messages.Where(m => m.Peer.ID == _channel!.channel_id).ToList();
         foreach (var message in filteredMessages)
             _logger.LogInformation("New message from channel: {Message}", message.message);
 

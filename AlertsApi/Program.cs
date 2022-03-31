@@ -1,6 +1,7 @@
 using AlertsApi.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using AlertsApi.Api.AutoMapper;
+using AlertsApi.Api.Services;
 using AlertsApi.Domain.Options;
 using AlertsApi.Domain.Repositories;
 using AlertsApi.Infrastructure.Repositories;
@@ -20,10 +21,6 @@ builder.Host.UseSerilog((host, configuration) =>
         .WriteTo.Seq(seqOptions.ServerUrl!, apiKey: seqOptions.ApiKey);
 });
 
-//Seq token ksbsVPaSniW4uTygTJFU
-
-// Add services to the container.
-
 builder.Services.AddDbContext<AlertDbContext>(contextOptionsBuilder =>
 {
     var connection = builder.Configuration.GetConnectionString("NpgsqlConnection");
@@ -31,6 +28,7 @@ builder.Services.AddDbContext<AlertDbContext>(contextOptionsBuilder =>
 });
 
 builder.Services.AddTransient<IAlertRepository, AlertRepository>();
+builder.Services.AddTransient<IAlertsService, AlertsService>();
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));

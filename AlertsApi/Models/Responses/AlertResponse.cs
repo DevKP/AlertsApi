@@ -10,22 +10,16 @@ namespace AlertsApi.Api.Models.Responses
         [JsonPropertyName("location_title")]
         public string? LocationTitle { get; set; }
 
-        //[JsonPropertyName("location_type")]
-        //public string? LocationType { get; set; }
-
         [JsonPropertyName("started_at")]
         public DateTime StartedAt { get; set; }
 
+        [JsonPropertyName("ended_at")]
+        public DateTime EndedAt { get; set; }
+
+        [JsonPropertyName("duration")]
+        public TimeSpan Duration { get; set; }
+
         [JsonPropertyName("active")]
         public bool Active { get; set; }
-
-        //[JsonPropertyName("finished_at")]
-        //public DateTime? FinishedAt { get; set; }
-
-        //[JsonPropertyName("updated_at")]
-        //public DateTime UpdatedAt { get; set; }
-
-        //[JsonPropertyName("calculated")]
-        //public object? Calculated { get; set; }
     }
 }

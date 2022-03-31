@@ -13,12 +13,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ITelegramClientService, TelegramClientService>(provider =>
         {
             var logger = provider.GetRequiredService<ILogger<TelegramClientService>>();
-            Helpers.Log = (i, msg) => logger?.Log((LogLevel) i, msg);
+            Helpers.Log = (i, msg) => logger?.Log((LogLevel) i,"[WTelegram]:{Message}", msg);
 
             var options = new ClientOptionsBuilder();
             optionsAction.Invoke(options);
 
-            var client = new TelegramClientService(logger, options.GetSessionsStorePath(), options.GetConfigProvider());
+            var client = new TelegramClientService(options.GetSessionsStorePath(), options.GetConfigProvider());
             return client;
         });
     }

@@ -1,4 +1,5 @@
 using AlertsApi.Api.Models.Responses;
+using AlertsApi.Api.Services;
 using AlertsApi.Domain.Entities;
 using AlertsApi.Domain.Repositories;
 using AutoMapper;
@@ -10,39 +11,35 @@ namespace AlertsApi.Api.Controllers
     [Route("[controller]")]
     public class AlertsController : ControllerBase
     {
-        private readonly IAlertRepository _alertRepository;
-        private readonly ILogger<AlertsController> _logger;
-        private readonly IMapper _mapper;
+        private readonly IAlertsService _alertsService;
 
-        public AlertsController(ILogger<AlertsController> logger, IAlertRepository alertRepository, IMapper mapper)
+        public AlertsController(IAlertsService alertsService)
         {
-            _logger = logger;
-            _alertRepository = alertRepository;
-            _mapper = mapper;
+            _alertsService = alertsService;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAlert(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var alert = await _alertRepository.GetAlertAsync(id);
-            return Ok(_mapper.Map<AlertResponse>(alert));
+            var alert = await _alertsService.GetAlertById(id);
+            if (alert is null)
+                return NotFound();
+
+            return Ok(alert);
         }
 
-        [HttpGet("GetAllAlerts")]
-        public async Task<IActionResult> GetAllAlert()
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAll()
         {
-            var alerts = await _alertRepository.GetAllAlertsAsync();
-            var alertsResponse = _mapper.Map<AlertsResponse>(alerts);
-            return Ok(alertsResponse);
+            var alerts = await _alertsService.GetAllAlerts();
+            return Ok(alerts);
         }
 
-        [HttpGet("GetActiveAlerts")]
-        public async Task<IActionResult> GetActiveAlerts()
+        [HttpGet("Active")]
+        public async Task<IActionResult> GetActive()
         {
-            var alerts = await _alertRepository.GetAllAlertsAsync();
-            var activeAlerts = alerts.Where(a => a.Active);
-            var alertsResponse = _mapper.Map<AlertsResponse>(activeAlerts);
-            return Ok(alertsResponse);
+            var alerts = await _alertsService.GetActiveAlerts();
+            return Ok(alerts);
         }
     }
 }

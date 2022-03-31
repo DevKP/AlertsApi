@@ -25,6 +25,11 @@ public class AlertRepository : IAlertRepository
         return await _dbContext.Alerts!.AsNoTracking().ToListAsync();
     }
 
+    public async Task<IEnumerable<Alert>> GetOnlyActiveAsync()
+    {
+        return await _dbContext.Alerts!.AsNoTracking().Where(a => a.Active).ToListAsync();
+    }
+
     public async Task<Alert?> GetAlertAsync(int id)
     {
         return await _dbContext.Alerts!.FindAsync(id);
@@ -41,7 +46,8 @@ public class AlertRepository : IAlertRepository
         if (alertDb is not null)
         {
             alertDb.Active = alert.Active;
-            alertDb.UpdateTime = alert.UpdateTime;
+            alertDb.StartTime = alert.StartTime;
+            alertDb.EndTime = alert.EndTime;
             await _dbContext.SaveChangesAsync();
         }
         else

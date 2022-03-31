@@ -9,29 +9,26 @@ namespace AlertsApi.WTelegram.Hosting.Services;
 public class TelegramClientService : ITelegramClientService
 {
     private readonly Client _client;
-    private readonly ILogger _logger;
 
     private Func<IEnumerable<Message>, Task>? _updatesListener;
 
-    public TelegramClientService(ILogger<TelegramClientService> logger, string sessionStorePath,
+    public TelegramClientService(string sessionStorePath,
         CustomConfigProvider configProvider)
     {
-        _logger = logger;
-
         _client = CreateClient(sessionStorePath, configProvider);
 
         _client.Update += OnUpdate;
     }
 
-    public async Task LoginUserIfNeeded()
-    {
-        await _client.LoginUserIfNeeded().ConfigureAwait(false);
-    }
-
-    private  Client CreateClient(string sessionPath, CustomConfigProvider configProvider)
+    private static Client CreateClient(string sessionPath, CustomConfigProvider configProvider)
     {
         var sessionStore = OpenFileStream(sessionPath);
         return new Client(configProvider.ConfigsProvider, sessionStore);
+    }
+
+    public async Task LoginUserIfNeeded()
+    {
+        await _client.LoginUserIfNeeded().ConfigureAwait(false);
     }
 
     public void AddMessagesListener(Func<IEnumerable<Message>, Task> listener)
@@ -52,11 +49,24 @@ public class TelegramClientService : ITelegramClientService
 
     public async Task<IEnumerable<Message>> GetHistoryFromIdAsync(InputPeerChannel channel, int messageId)
     {
-        var messagesChunk = await  _client.Messages_GetHistory(channel, min_id: messageId).ConfigureAwait(false);
+        const int maxMessageOffset = 1000;
+        const int messageLimit = 50;
 
-        var messages = messagesChunk.Messages
-            .Where(msg => msg is Message)
-            .Cast<Message>();
+        var messages = new List<Message>();
+        for (var offset = 0; offset < maxMessageOffset; offset += messageLimit)
+        {
+            var messagesChunk = await _client.Messages_GetHistory(channel, min_id: messageId, limit: messageLimit, add_offset: offset)
+                .ConfigureAwait(false);
+
+            var messagesChunkList = messagesChunk.Messages
+                .Where(msg => msg is Message)
+                .Cast<Message>().ToList();
+
+            messages.AddRange(messagesChunkList);
+
+            if(messagesChunkList.Count < messageLimit)
+                break;
+        }
 
         return messages;
     }

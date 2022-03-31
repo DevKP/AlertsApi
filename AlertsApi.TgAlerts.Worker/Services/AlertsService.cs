@@ -27,6 +27,9 @@ class AlertsService : IAlertsService
             if (dbAlert is null)
             {
                 var alertEntity = _mapper.Map<TgAlert, Alert>(alert);
+                alertEntity.UpdateTime = alert.FetchedAt;
+                SetStartEndTime(alert, alertEntity);
+
                 await _alertRepository.CreateAlertAsync(alertEntity);
 
                 _logger.LogInformation("New location. Location: {Location}, State: {State}",
@@ -39,6 +42,8 @@ class AlertsService : IAlertsService
             {
                 dbAlert.Active = alert.Active;
                 dbAlert.UpdateTime = alert.FetchedAt;
+                SetStartEndTime(alert, dbAlert);
+
                 await _alertRepository.UpdateAlertAsync(dbAlert);
 
                 _logger.LogInformation("Alert state changed. Location: {Location}, State: {State}",
@@ -46,5 +51,17 @@ class AlertsService : IAlertsService
             }
         }
         
+    }
+
+    private static void SetStartEndTime(TgAlert alertFromTelegram, Alert alert)
+    {
+        if (alertFromTelegram.Active)
+        {
+            alert.StartTime = alertFromTelegram.FetchedAt;
+        }
+        else
+        {
+            alert.EndTime = alertFromTelegram.FetchedAt;
+        }
     }
 }
