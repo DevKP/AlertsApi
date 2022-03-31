@@ -21,8 +21,11 @@ namespace AlertsApi.Api.AutoMapper
 
         private static TimeSpan? DurationMappingFunction(Alert alert)
         {
-            if (alert.StartTime == null || alert.EndTime == null)
+            if (alert.StartTime is null)
                 return null;
+
+            if (alert.EndTime is null)
+                return DateTime.UtcNow - alert.StartTime;
 
             return alert.EndTime - alert.StartTime;
         }
