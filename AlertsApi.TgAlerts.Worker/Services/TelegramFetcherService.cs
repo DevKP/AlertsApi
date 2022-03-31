@@ -39,7 +39,7 @@ public class TelegramFetcherService : BackgroundService
         _mapper = mapper;
         _logger = logger;
         _alarmOptions = options.Value;
-        _dateFrom = DateTime.UtcNow.AddHours(-(_alarmOptions.InitialMessagesHours ?? 24));
+        _dateFrom = DateTime.UtcNow.AddHours(-_alarmOptions.InitialMessagesHours);
 
         Console.OutputEncoding = Encoding.UTF8;
     }
