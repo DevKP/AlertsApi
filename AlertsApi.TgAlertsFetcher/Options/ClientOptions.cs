@@ -8,5 +8,5 @@ public class ClientOptions
     public string? SessionStorePath { get; init; }
     public string? ChannelName { get; set; }
 
-    public int? InitialMessagesHours;
+    public int? InitialMessagesHours { get; set; }
 }
