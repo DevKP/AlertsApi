@@ -39,6 +39,7 @@ class AlertsService : IAlertsService
             }
 
             if (alert.FetchedAt > dbAlert.UpdateTime)
+            //if()
             {
                 dbAlert.Active = alert.Active;
                 dbAlert.UpdateTime = alert.FetchedAt;

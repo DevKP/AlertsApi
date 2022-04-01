@@ -1,4 +1,5 @@
 ﻿using AlertsApi.Domain.Entities;
+using AlertsApi.Domain.Queries;
 using AlertsApi.Domain.Repositories;
 using AlertsApi.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,28 @@ public class AlertRepository : IAlertRepository
     public async Task<IEnumerable<Alert>> GetOnlyActiveAsync()
     {
         return await _dbContext.Alerts!.AsNoTracking().Where(a => a.Active).ToListAsync();
+    }
+
+    public async Task<IEnumerable<Alert>> GetQueryAsync(AlertsQuery alertQuery)
+    {
+        var query = _dbContext.Alerts!.AsNoTracking();
+
+        if (alertQuery.From is not null)
+        {
+            query = query.Where(a => alertQuery.From <= a.UpdateTime);
+        }
+
+        if (alertQuery.To is not null)
+        {
+            query = query.Where(a => a.UpdateTime <= alertQuery.To);
+        }
+
+        if (alertQuery.Active is not null)
+        {
+            query = query.Where(a => a.Active == alertQuery.Active);
+        }
+
+        return await query.ToListAsync();
     }
 
     public async Task<Alert?> GetAlertAsync(int id)
