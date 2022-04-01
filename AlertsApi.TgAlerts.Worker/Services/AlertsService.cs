@@ -58,6 +58,7 @@ class AlertsService : IAlertsService
         if (alertFromTelegram.Active)
         {
             alert.StartTime = alertFromTelegram.FetchedAt;
+            alert.EndTime = null;
         }
         else
         {
