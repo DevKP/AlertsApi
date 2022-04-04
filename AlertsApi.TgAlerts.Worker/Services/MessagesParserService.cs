@@ -8,21 +8,17 @@ class MessagesParserService : IMessagesParserService
 {
     private readonly string[] _alertOffKeywords = {"🟢", "🟡"};
     private readonly Regex _locationRegex = new("#(?<location>[\\w_]+)", RegexOptions.Compiled | RegexOptions.Singleline);
-  
+
     public IEnumerable<TgAlert> ParseMessages(IEnumerable<Message> messages)
     {
         foreach (var message in messages)
         {
-            var locationMatch = _locationRegex.Match(message.message);
-            if (!locationMatch.Success)
-                continue;
-
-            var locationHashTag = locationMatch.Groups["location"].Value;
-            if(locationHashTag.IsEmptyOrWhiteSpace())
+            var locationHashTag = GetLocation(message.message);
+            if (locationHashTag.IsEmptyOrWhiteSpace())
                 continue;
             
             var location = FormatLocationTag(locationHashTag);
-            var alertState = GetAlertState(message.message);
+            var alertState = IsAlertOff(message.message);
             var alert = new TgAlert
             {
                 LocationTitle = location,
@@ -34,11 +30,15 @@ class MessagesParserService : IMessagesParserService
         }
     }
 
-    private bool GetAlertState(string message)
+    public bool IsAlertOff(string message)
     {
-        var alarmNotActive =
-            _alertOffKeywords.Any(keyword => message.Contains(keyword, StringComparison.OrdinalIgnoreCase));
-        return !alarmNotActive;
+        return _alertOffKeywords.Any(keyword => message.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public string GetLocation(string message)
+    {
+        var match = _locationRegex.Match(message);
+        return match.Success ? match.Groups["location"].Value : string.Empty;
     }
 
     private static string FormatLocationTag(string locationTag)

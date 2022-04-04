@@ -28,7 +28,9 @@ builder.Services.AddDbContext<AlertDbContext>(contextOptionsBuilder =>
 });
 
 builder.Services.AddTransient<IAlertRepository, AlertRepository>();
+builder.Services.AddTransient<IMessageRepository, MessageRepository>();
 builder.Services.AddTransient<IAlertsService, AlertsService>();
+builder.Services.AddTransient<IMessagesService, MessagesService>();
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile));

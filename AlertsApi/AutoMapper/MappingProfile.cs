@@ -9,14 +9,20 @@ namespace AlertsApi.Api.AutoMapper
         public MappingProfile()
         {
             CreateMap<Alert, AlertResponse>()
-                .ForMember(dest => dest.LocationTitle, opt => opt.MapFrom(src => src.LocationName))
+                .ForMember(dest => dest.LocationTitle, opt => opt.MapFrom(src => LocationMappingFunction(src)))
                 .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => src.StartTime))
                 .ForMember(dest => dest.EndedAt, opt => opt.MapFrom(src => src.EndTime))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(srs => DurationMappingFunction(srs)))
                 .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Active));
 
+
             CreateMap<IEnumerable<Alert>, AlertsResponse>()
                 .ForMember(dest => dest.Alerts, opt => opt.MapFrom(src => src.ToList()));
+        }
+
+        private static string LocationMappingFunction(Alert alert)
+        {
+            return alert.LocationName!.Replace("м", "м.");
         }
 
         private static TimeSpan? DurationMappingFunction(Alert alert)

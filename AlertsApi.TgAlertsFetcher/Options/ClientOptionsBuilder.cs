@@ -10,13 +10,13 @@ public class ClientOptionsBuilder
         _configDictionary = new Dictionary<string, string?>();
     }
 
-    public ClientOptionsBuilder SetCustomConfig(string name, string value)
+    public ClientOptionsBuilder WithCustomConfig(string name, string value)
     {
         _configDictionary.TryAdd(name, value);
         return this;
     }
 
-    public ClientOptionsBuilder SetSessionsStore(string path)
+    public ClientOptionsBuilder WithSessionStorePath(string path)
     {
         _sessionStorePath = path;
         return this;

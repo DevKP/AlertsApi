@@ -26,7 +26,13 @@ var host = Host.CreateDefaultBuilder(args)
             .WriteTo.Console()
             .WriteTo.Seq(serverUrl: seqOptions.ServerUrl!, apiKey: seqOptions.ApiKey);
     })
-    .ConfigureServices((hostBuilder, services) =>
+    .ConfigureAppConfiguration((host, config) =>
+    {
+        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        config.AddJsonFile($"appsettings.{host.HostingEnvironment.EnvironmentName}.json", optional: true);
+        config.AddEnvironmentVariables();
+    })
+    .ConfigureServices((hostBuilder, services) => 
     {
         services.Configure<ClientOptions>(hostBuilder.Configuration.GetSection(ClientOptions.ConfigKey));
         services.AddDbContext<AlertDbContext>(contextOptionsBuilder =>
@@ -45,15 +51,15 @@ var host = Host.CreateDefaultBuilder(args)
         {
             var options = hostBuilder.Configuration.GetSection(ClientOptions.ConfigKey).Get<ClientOptions>();
             optionsBuilder
-                .SetSessionsStore(options.SessionStorePath!)
-                .SetCustomConfig("phone_number", "+380995031137")
-                .SetCustomConfig("api_id", "19657090")
-                .SetCustomConfig("api_hash", "01d7dcd1490c1b6f89985882379ad0ab")
-                .SetCustomConfig("server_address", "149.154.167.50:443")
-                .SetCustomConfig("device_model", "model")
-                .SetCustomConfig("system_version", "win10")
-                .SetCustomConfig("app_version", "v0.1")
-                .SetCustomConfig("system_lang_code", "en");
+                .WithSessionStorePath(options.SessionStorePath!)
+                .WithCustomConfig("phone_number", "+380995031137")
+                .WithCustomConfig("api_id", "19657090")
+                .WithCustomConfig("api_hash", "01d7dcd1490c1b6f89985882379ad0ab")
+                .WithCustomConfig("server_address", "149.154.167.50:443")
+                .WithCustomConfig("device_model", "model")
+                .WithCustomConfig("system_version", "win10")
+                .WithCustomConfig("app_version", "v0.1")
+                .WithCustomConfig("system_lang_code", "en");
         });
 
         services.AddHostedService<TelegramFetcherService>();

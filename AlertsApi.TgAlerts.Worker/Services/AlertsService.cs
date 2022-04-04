@@ -23,6 +23,7 @@ class AlertsService : IAlertsService
     {
         foreach (var alert in alerts)
         {
+            // If alert doesn't exist, create it
             var dbAlert = await _alertRepository.GetAlertByLocationAsync(alert.LocationTitle!);
             if (dbAlert is null)
             {
@@ -38,8 +39,8 @@ class AlertsService : IAlertsService
                 continue;
             }
 
+            // If alert exists, update it
             if (alert.FetchedAt > dbAlert.UpdateTime)
-            //if()
             {
                 dbAlert.Active = alert.Active;
                 dbAlert.UpdateTime = alert.FetchedAt;
@@ -51,11 +52,18 @@ class AlertsService : IAlertsService
                     dbAlert.LocationName, dbAlert.Active);
             }
         }
-        
+
     }
 
+
+    /// <summary>
+    /// Sets start and end time for alert
+    /// </summary>
+    /// <param name="alertFromTelegram"></param>
+    /// <param name="alert"></param>
     private static void SetStartEndTime(TgAlert alertFromTelegram, Alert alert)
     {
+        
         if (alertFromTelegram.Active)
         {
             alert.StartTime = alertFromTelegram.FetchedAt;

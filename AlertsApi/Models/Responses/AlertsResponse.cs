@@ -6,7 +6,5 @@ namespace AlertsApi.Api.Models.Responses
     {
         [JsonPropertyName("alerts")]
         public List<AlertResponse>? Alerts { get; set; }
-
-
     }
 }
