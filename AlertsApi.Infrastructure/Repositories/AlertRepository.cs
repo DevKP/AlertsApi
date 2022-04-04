@@ -37,7 +37,7 @@ public class AlertRepository : IAlertRepository
 
         if (alertQuery.From is not null)
         {
-            query = query.Where(a => alertQuery.From <= (a.StartTime ?? a.EndTime));
+            query = query.Where(a => alertQuery.From <= (a.EndTime ?? a.StartTime));
         }
 
         if (alertQuery.To is not null)
