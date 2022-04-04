@@ -18,7 +18,7 @@ class MessagesParserService : IMessagesParserService
                 continue;
             
             var location = FormatLocationTag(locationHashTag);
-            var alertState = IsAlertOff(message.message);
+            var alertState = !IsAlertOff(message.message);
             var alert = new TgAlert
             {
                 LocationTitle = location,

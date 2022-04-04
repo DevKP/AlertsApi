@@ -20,6 +20,8 @@ namespace AlertsApi.Api.AutoMapper
                 .ForMember(dest => dest.Alerts, opt => opt.MapFrom(src => src.ToList()));
         }
 
+
+        //Костыль для добавления точки перед аббревиатурой города
         private static string LocationMappingFunction(Alert alert)
         {
             if (alert.LocationName!.StartsWith("м "))
