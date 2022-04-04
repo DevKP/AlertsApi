@@ -39,20 +39,45 @@ class AlertsService : IAlertsService
                 continue;
             }
 
-            // If alert exists, update it
-            if (alert.FetchedAt > dbAlert.UpdateTime)
+            if (alert.Active)
             {
-                dbAlert.Active = alert.Active;
-                dbAlert.UpdateTime = alert.FetchedAt;
-                SetStartEndTime(alert, dbAlert);
-
-                await _alertRepository.UpdateAlertAsync(dbAlert);
-
-                _logger.LogInformation("Alert state changed. Location: {Location}, State: {State}",
-                    dbAlert.LocationName, dbAlert.Active);
+                ActivateAlert(dbAlert, alert);
             }
+            else
+            {
+                DeactivateAlert(dbAlert, alert);
+            }
+
+            await _alertRepository.UpdateAlertAsync(dbAlert);
+
+            _logger.LogInformation("Alert state changed. Location: {Location}, State: {State}",
+                dbAlert.LocationName, dbAlert.Active);
         }
 
+    }
+
+    private static void DeactivateAlert(Alert dbAlert, TgAlert alert)
+    {
+        if (dbAlert.StartTime is not null &&
+            dbAlert.StartTime < alert.FetchedAt)
+        {
+            dbAlert.EndTime = alert.FetchedAt;
+        }
+    }
+    
+    private static void ActivateAlert(Alert dbAlert, TgAlert alert)
+    {
+        if (dbAlert.StartTime is null ||
+            dbAlert.StartTime < alert.FetchedAt)
+        {
+            dbAlert.StartTime = alert.FetchedAt;
+        }
+
+        if (dbAlert.EndTime is not null &&
+            dbAlert.StartTime > dbAlert.EndTime)
+        {
+            dbAlert.EndTime = null;
+        }
     }
 
 

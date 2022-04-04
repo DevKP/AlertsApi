@@ -18,7 +18,7 @@ class MessagesParserService : IMessagesParserService
                 continue;
             
             var location = FormatLocationTag(locationHashTag);
-            var alertState = !IsAlertOff(message.message);
+            var alertState = IsAlertOn(message.message);
             var alert = new TgAlert
             {
                 LocationTitle = location,
@@ -30,9 +30,9 @@ class MessagesParserService : IMessagesParserService
         }
     }
 
-    public bool IsAlertOff(string message)
+    public bool IsAlertOn(string message)
     {
-        return _alertOffKeywords.Any(keyword => message.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+        return !_alertOffKeywords.Any(keyword => message.Contains(keyword, StringComparison.OrdinalIgnoreCase));
     }
 
     public string GetLocation(string message)
