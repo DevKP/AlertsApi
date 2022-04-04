@@ -22,7 +22,12 @@ namespace AlertsApi.Api.AutoMapper
 
         private static string LocationMappingFunction(Alert alert)
         {
-            return alert.LocationName!.Replace("м", "м.");
+            if (alert.LocationName!.StartsWith("м "))
+            {
+                return alert.LocationName.Replace("м ", "м. ");
+            }
+            
+            return alert.LocationName!;
         }
 
         private static TimeSpan? DurationMappingFunction(Alert alert)
