@@ -29,7 +29,10 @@ class AlertsService : IAlertsService
             {
                 var alertEntity = _mapper.Map<TgAlert, Alert>(alert);
                 alertEntity.UpdateTime = alert.FetchedAt;
-                SetStartEndTime(alert, alertEntity);
+                if(alert.Active)
+                    alertEntity.StartTime = alert.FetchedAt;
+                else
+                    alertEntity.EndTime = alert.FetchedAt;
 
                 await _alertRepository.CreateAlertAsync(alertEntity);
 
@@ -39,45 +42,62 @@ class AlertsService : IAlertsService
                 continue;
             }
 
-            if (alert.Active)
+            if (SetAlertState(alert, dbAlert))
             {
-                ActivateAlert(dbAlert, alert);
-            }
-            else
-            {
-                DeactivateAlert(dbAlert, alert);
-            }
+                dbAlert.UpdateTime = alert.FetchedAt;
 
-            await _alertRepository.UpdateAlertAsync(dbAlert);
+                await _alertRepository.UpdateAlertAsync(dbAlert);
 
-            _logger.LogInformation("Alert state changed. Location: {Location}, State: {State}",
-                dbAlert.LocationName, dbAlert.Active);
+                _logger.LogInformation("Alert state changed. Location: {Location}, State: {State}",
+                    dbAlert.LocationName, dbAlert.Active);
+            }
         }
 
     }
 
-    private static void DeactivateAlert(Alert dbAlert, TgAlert alert)
+    private static bool SetAlertState(TgAlert alert, Alert dbAlert)
+    {
+        if (alert.Active)
+        {
+            return ActivateAlert(dbAlert, alert);
+        }
+        else
+        {
+            return DeactivateAlert(dbAlert, alert);
+        }
+    }
+
+    private static bool DeactivateAlert(Alert dbAlert, TgAlert alert)
     {
         if (dbAlert.StartTime is not null &&
             dbAlert.StartTime < alert.FetchedAt)
         {
             dbAlert.EndTime = alert.FetchedAt;
+            return true;
         }
+
+        return false;
     }
     
-    private static void ActivateAlert(Alert dbAlert, TgAlert alert)
+    private static bool ActivateAlert(Alert dbAlert, TgAlert alert)
     {
+        var changed = false;
+        
         if (dbAlert.StartTime is null ||
             dbAlert.StartTime < alert.FetchedAt)
         {
             dbAlert.StartTime = alert.FetchedAt;
+            changed = true;
         }
 
         if (dbAlert.EndTime is not null &&
             dbAlert.StartTime > dbAlert.EndTime)
         {
             dbAlert.EndTime = null;
+            changed = true;
         }
+
+        return changed;
     }
 
 
