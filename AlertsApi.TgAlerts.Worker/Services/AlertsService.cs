@@ -69,20 +69,23 @@ class AlertsService : IAlertsService
 
     private static bool DeactivateAlert(Alert dbAlert, TgAlert alert)
     {
+        dbAlert.Active = false;
+        
         if (dbAlert.StartTime is not null &&
             dbAlert.StartTime < alert.FetchedAt)
         {
             dbAlert.EndTime = alert.FetchedAt;
             return true;
         }
-
+        
         return false;
     }
     
     private static bool ActivateAlert(Alert dbAlert, TgAlert alert)
     {
-        var changed = false;
+        dbAlert.Active = true;
         
+        var changed = false;
         if (dbAlert.StartTime is null ||
             dbAlert.StartTime < alert.FetchedAt)
         {
@@ -98,25 +101,5 @@ class AlertsService : IAlertsService
         }
 
         return changed;
-    }
-
-
-    /// <summary>
-    /// Sets start and end time for alert
-    /// </summary>
-    /// <param name="alertFromTelegram"></param>
-    /// <param name="alert"></param>
-    private static void SetStartEndTime(TgAlert alertFromTelegram, Alert alert)
-    {
-        
-        if (alertFromTelegram.Active)
-        {
-            alert.StartTime = alertFromTelegram.FetchedAt;
-            alert.EndTime = null;
-        }
-        else
-        {
-            alert.EndTime = alertFromTelegram.FetchedAt;
-        }
     }
 }
