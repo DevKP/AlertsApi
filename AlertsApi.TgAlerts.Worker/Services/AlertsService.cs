@@ -69,12 +69,11 @@ class AlertsService : IAlertsService
 
     private static bool DeactivateAlert(Alert dbAlert, TgAlert alert)
     {
-        dbAlert.Active = false;
-        
         if (dbAlert.StartTime is not null &&
             dbAlert.StartTime < alert.FetchedAt)
         {
             dbAlert.EndTime = alert.FetchedAt;
+            dbAlert.Active = false;
             return true;
         }
         
@@ -83,8 +82,6 @@ class AlertsService : IAlertsService
     
     private static bool ActivateAlert(Alert dbAlert, TgAlert alert)
     {
-        dbAlert.Active = true;
-        
         var changed = false;
         if (dbAlert.StartTime is null ||
             dbAlert.StartTime < alert.FetchedAt)
@@ -99,6 +96,9 @@ class AlertsService : IAlertsService
             dbAlert.EndTime = null;
             changed = true;
         }
+
+        if(changed)
+            dbAlert.Active = true;
 
         return changed;
     }
