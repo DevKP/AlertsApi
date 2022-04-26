@@ -7,7 +7,7 @@ using AlertsApi.Domain.Repositories;
 using AlertsApi.Infrastructure.Repositories;
 using Serilog;
 using Serilog.Events;
-
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +32,12 @@ builder.Services.AddTransient<IMessageRepository, MessageRepository>();
 builder.Services.AddTransient<IAlertsService, AlertsService>();
 builder.Services.AddTransient<IMessagesService, MessagesService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.DefaultIgnoreCondition
+                      = JsonIgnoreCondition.WhenWritingNull;
+});
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

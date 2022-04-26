@@ -14,7 +14,7 @@ namespace AlertsApi.Api.Models.Responses
         public DateTime StartedAt { get; set; }
 
         [JsonPropertyName("ended_at")]
-        public DateTime EndedAt { get; set; }
+        public DateTime? EndedAt { get; set; }
 
         [JsonPropertyName("duration")]
         public TimeSpan Duration { get; set; }
