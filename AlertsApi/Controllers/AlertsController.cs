@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AlertsApi.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AlertsController : ControllerBase
     {
         private readonly IAlertsService _alertsService;
