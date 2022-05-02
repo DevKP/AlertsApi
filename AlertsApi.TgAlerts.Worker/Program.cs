@@ -39,7 +39,7 @@ var host = Host.CreateDefaultBuilder(args)
         {
             var connection = hostBuilder.Configuration.GetConnectionString("NpgsqlConnection");
             contextOptionsBuilder.UseNpgsql(connection);
-        }, ServiceLifetime.Singleton);
+        }, ServiceLifetime.Transient);
 
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddTransient<IAlertRepository, AlertRepository>();
@@ -47,7 +47,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddTransient<IAlertsService, AlertsService>();
         services.AddTransient<IMessagesParserService, MessagesParserService>();
 
-        services.AddScoped<ITelegramBotService, TelegramBotService>();
+        services.AddSingleton<ITelegramBotService, TelegramBotService>();
 
         services.AddWTelegram(optionsBuilder =>
         {
@@ -65,6 +65,7 @@ var host = Host.CreateDefaultBuilder(args)
         });
 
         services.AddHostedService<TelegramFetcherService>();
+        services.AddHostedService<NotificationsService>();
     });
 
 using var app = host.Build();

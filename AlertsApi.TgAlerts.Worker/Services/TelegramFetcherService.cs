@@ -18,7 +18,6 @@ public class TelegramFetcherService : BackgroundService
     private readonly IMessageRepository _messageRepository;
     private readonly ITelegramClientService _client;
     private readonly IMessagesParserService _messagesParser;
-    private readonly ITelegramBotService _botService;
     private readonly IMapper _mapper;
     private readonly ILogger _logger;
 
@@ -28,7 +27,7 @@ public class TelegramFetcherService : BackgroundService
 
     public TelegramFetcherService(IAlertsService alertsService, IOptions<ClientOptions> options,
         ILogger<TelegramFetcherService> logger, IMessageRepository messageRepository, IMapper mapper,
-        IMessagesParserService messagesParser, ITelegramClientService client, ITelegramBotService botService)
+        IMessagesParserService messagesParser, ITelegramClientService client)
     {
         ArgumentNullException.ThrowIfNull(alertsService, nameof(alertsService));
         ArgumentNullException.ThrowIfNull(options, nameof(options));
@@ -37,7 +36,6 @@ public class TelegramFetcherService : BackgroundService
         _messagesParser = messagesParser;
         _alertsService = alertsService;
         _messageRepository = messageRepository;
-        _botService = botService;
         _mapper = mapper;
         _logger = logger;
         _alarmOptions = options.Value;
@@ -66,9 +64,6 @@ public class TelegramFetcherService : BackgroundService
 
             _logger.LogInformation("Start monitoring real time updates.");
             _client.AddMessagesListener(NewMessagesListenerAsync);
-
-            _logger.LogInformation("Start telegram bot.");
-            await _botService.Start();
         }
         catch(Exception ex)
         {
@@ -89,11 +84,6 @@ public class TelegramFetcherService : BackgroundService
 
         var alerts = _messagesParser.ParseMessages(filteredMessages);
         await _alertsService.UpdateAlertsAsync(alerts);
-
-        foreach(var alert in alerts)
-        {
-            await _botService.Invoke(alert.LocationTitle, alert.OriginalMessage);
-        }
     }
 
     private async Task<IEnumerable<Message>> GetNewMessages(InputPeerChannel channel)

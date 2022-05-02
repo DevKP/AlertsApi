@@ -71,6 +71,7 @@ public class AlertRepository : IAlertRepository
             alertDb.Active = alert.Active;
             alertDb.StartTime = alert.StartTime;
             alertDb.EndTime = alert.EndTime;
+            alertDb.UsersNotified = alert.UsersNotified;
             await _dbContext.SaveChangesAsync();
         }
         else
@@ -97,5 +98,11 @@ public class AlertRepository : IAlertRepository
     public async Task<bool> IsAlertExits(string location)
     {
         return await _dbContext.Alerts!.AnyAsync(a => a.LocationName == location);
+    }
+
+    public async Task<IEnumerable<Alert>> GetNotNotifiedAsync()
+    {
+       return await _dbContext.Alerts!.Where(a => a.UsersNotified == false)
+                                        .AsNoTracking().ToListAsync();
     }
 }

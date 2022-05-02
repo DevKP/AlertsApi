@@ -9,7 +9,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
 {
     public interface ITelegramBotService
     {
-        Task Invoke(string locationName, string message);
+        Task Notify(string locationName, string message);
         Task Start();
     }
 }

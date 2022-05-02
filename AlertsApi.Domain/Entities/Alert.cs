@@ -13,4 +13,6 @@ public class Alert : IEntity
     public DateTime? EndTime { get; set; }
 
     public bool Active { get; set; }
+
+    public bool UsersNotified { get; set; }
 }

@@ -8,6 +8,7 @@ public interface IAlertRepository
     Task CreateAlertAsync(Alert alert);
     Task<IEnumerable<Alert>> GetAllAlertsAsync();
     Task<IEnumerable<Alert>> GetOnlyActiveAsync();
+    Task<IEnumerable<Alert>> GetNotNotifiedAsync();
     Task<IEnumerable<Alert>> GetQueryAsync(AlertsQuery query);
     Task<Alert?> GetAlertAsync(int id);
     Task<Alert?> GetAlertByLocationAsync(string location);

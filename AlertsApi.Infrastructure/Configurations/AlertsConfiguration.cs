@@ -14,5 +14,6 @@ public class AlertsConfiguration : IEntityTypeConfiguration<Alert>
         builder.Property(alert => alert.EndTime);
         builder.Property(alert => alert.UpdateTime).IsRequired();
         builder.Property(alert => alert.Active).IsRequired();
+        builder.Property(alert => alert.UsersNotified).IsRequired();
     }
 }

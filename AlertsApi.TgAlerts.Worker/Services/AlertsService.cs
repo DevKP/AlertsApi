@@ -29,10 +29,16 @@ class AlertsService : IAlertsService
             {
                 var alertEntity = _mapper.Map<TgAlert, Alert>(alert);
                 alertEntity.UpdateTime = alert.FetchedAt;
+                alertEntity.UsersNotified = false;
+
                 if(alert.Active)
+                {
                     alertEntity.StartTime = alert.FetchedAt;
+                }
                 else
+                {
                     alertEntity.EndTime = alert.FetchedAt;
+                }
 
                 await _alertRepository.CreateAlertAsync(alertEntity);
 
@@ -45,7 +51,8 @@ class AlertsService : IAlertsService
             if (SetAlertState(alert, dbAlert))
             {
                 dbAlert.UpdateTime = alert.FetchedAt;
-
+                dbAlert.UsersNotified = false;
+                
                 await _alertRepository.UpdateAlertAsync(dbAlert);
 
                 _logger.LogInformation("Alert state changed. Location: {Location}, State: {State}",
