@@ -72,8 +72,9 @@ public class AlertRepository : IAlertRepository
         //     // alertDb.StartTime = alert.StartTime;
         //     // alertDb.EndTime = alert.EndTime;
         //     // alertDb.UsersNotified = alert.UsersNotified;
-            _dbContext.Alerts.Update(alert);
-            await _dbContext.SaveChangesAsync();
+        _dbContext.Alerts!.Update(alert);
+        // _dbContext.Entry(alert).State = EntityState.Detached;
+        await _dbContext.SaveChangesAsync();
         // }
         // else
         // {
