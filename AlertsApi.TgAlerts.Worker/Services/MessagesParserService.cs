@@ -23,7 +23,8 @@ class MessagesParserService : IMessagesParserService
             {
                 LocationTitle = location,
                 FetchedAt = message.Date,
-                Active = alertState
+                Active = alertState,
+                OriginalMessage = message.message
             };
 
             yield return alert;

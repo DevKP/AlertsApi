@@ -47,7 +47,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddTransient<IAlertsService, AlertsService>();
         services.AddTransient<IMessagesParserService, MessagesParserService>();
 
-        //services.AddScoped<ITelegramBotService, TelegramBotService>();
+        services.AddScoped<ITelegramBotService, TelegramBotService>();
 
         services.AddWTelegram(optionsBuilder =>
         {

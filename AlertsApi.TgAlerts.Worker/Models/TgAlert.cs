@@ -11,5 +11,8 @@ namespace AlertsApi.TgAlerts.Worker.Models
 
         [JsonPropertyName("started_at")]
         public DateTime FetchedAt { get; set; }
+
+        [JsonIgnore]
+        public string? OriginalMessage { get; set; }
     }
 }
