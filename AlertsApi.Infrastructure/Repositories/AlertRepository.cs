@@ -68,10 +68,11 @@ public class AlertRepository : IAlertRepository
         var alertDb = await _dbContext.Alerts!.FindAsync(alert.LocationName);
         if (alertDb is not null)
         {
-            alertDb.Active = alert.Active;
-            alertDb.StartTime = alert.StartTime;
-            alertDb.EndTime = alert.EndTime;
-            alertDb.UsersNotified = alert.UsersNotified;
+            // alertDb.Active = alert.Active;
+            // alertDb.StartTime = alert.StartTime;
+            // alertDb.EndTime = alert.EndTime;
+            // alertDb.UsersNotified = alert.UsersNotified;
+            _dbContext.Alerts.Update(alert);
             await _dbContext.SaveChangesAsync();
         }
         else
