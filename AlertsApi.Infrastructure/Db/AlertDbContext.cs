@@ -11,7 +11,7 @@ public class AlertDbContext : DbContext
 
     public AlertDbContext(DbContextOptions<AlertDbContext> options) : base(options)
     {
-        //Database.EnsureDeleted();
+        this.ChangeTracker.AutoDetectChangesEnabled = false;
         Database.EnsureCreated();
     }
 
