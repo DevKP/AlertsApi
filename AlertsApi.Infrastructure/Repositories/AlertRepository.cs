@@ -65,21 +65,21 @@ public class AlertRepository : IAlertRepository
     
     public async Task UpdateAlertAsync(Alert alert)
     {
-        var alertDb = await _dbContext.Alerts!.FindAsync(alert.LocationName);
-        if (alertDb is not null)
-        {
-            // alertDb.Active = alert.Active;
-            // alertDb.StartTime = alert.StartTime;
-            // alertDb.EndTime = alert.EndTime;
-            // alertDb.UsersNotified = alert.UsersNotified;
+        // var alertDb = await _dbContext.Alerts!.FindAsync(alert.LocationName);
+        // if (alertDb is not null)
+        // {
+        //     // alertDb.Active = alert.Active;
+        //     // alertDb.StartTime = alert.StartTime;
+        //     // alertDb.EndTime = alert.EndTime;
+        //     // alertDb.UsersNotified = alert.UsersNotified;
             _dbContext.Alerts.Update(alert);
             await _dbContext.SaveChangesAsync();
-        }
-        else
-        {
-            await _dbContext.Alerts.AddAsync(alert);
-            await _dbContext.SaveChangesAsync();
-        }
+        // }
+        // else
+        // {
+        //     await _dbContext.Alerts.AddAsync(alert);
+        //     await _dbContext.SaveChangesAsync();
+        // }
     }
 
     public async Task DeleteAlertAsync(string location)
