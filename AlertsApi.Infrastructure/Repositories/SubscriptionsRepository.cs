@@ -22,7 +22,7 @@ public class SubscriptionsRepository : ISubscriptionsRepository
 
     public async Task<IEnumerable<Subscription>> GetAllByUserAsync(long userId)
     {
-        return await _alertDbContext.Subscriptions!.AsNoTracking().Where(sub => sub.UserId == userId).ToListAsync();
+        return await _alertDbContext.Subscriptions!.Include(sub => sub.Alert).AsNoTracking().Where(sub => sub.UserId == userId).ToListAsync();
     }
 
     public async Task<Subscription?> GetAsync(long userId, string hashTag)
