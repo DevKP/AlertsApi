@@ -71,7 +71,13 @@ namespace AlertsApi.TgAlerts.Worker.Services
 
                 if (message.Text!.Equals("/subscriptions", StringComparison.OrdinalIgnoreCase))
                 {
-                    var subscriptions = await _subscriptionsService.GetUserSubscriptionsAsync(message.Chat.Id);
+                    var subscriptions = (await _subscriptionsService.GetUserSubscriptionsAsync(message.Chat.Id)).ToList();
+                    if (!subscriptions.Any())
+                    {
+                        await _client.SendTextMessageAsync(message.Chat.Id, "Ти не отримуєш сповіщення.", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
+                        return;
+                    }
+
                     var list = subscriptions.Select(sub => sub.Alert?.LocationName).ToArray();
                     await _client.SendTextMessageAsync(message.Chat.Id, string.Join('\n', list), cancellationToken: cancellationToken);
                     return;
