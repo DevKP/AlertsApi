@@ -69,7 +69,8 @@ namespace AlertsApi.TgAlerts.Worker.Services
                     return;
                 }
 
-                var locations = _alerts.Where(a =>
+                var alerts = await _alertRepository.GetAllAlertsAsync();
+                var locations = alerts.Where(a =>
                     a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 if (locations.Count > 1)
@@ -87,7 +88,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                     return;
                 }
 
-                var alert = _alerts.FirstOrDefault(a => a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase));
+                var alert = alerts.FirstOrDefault(a => a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase));
                 if (alert is null)
                 {
                     await _client.SendTextMessageAsync(message.Chat.Id, "Не знайдено.", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
