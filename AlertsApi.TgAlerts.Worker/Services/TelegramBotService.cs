@@ -79,11 +79,11 @@ namespace AlertsApi.TgAlerts.Worker.Services
 
                 var alerts = (await _alertRepository.GetAllAlertsAsync()).ToList();
                 var locations = alerts.Where(a =>
-                    a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase)).ToList();
+                    a.LocationName!.Contains(message.Text, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 if (locations.Count > 1)
                 {
-                    var buttons = locations.Select(l => new[] { new KeyboardButton(l.LocationHashTag) });
+                    var buttons = locations.Select(l => new[] { new KeyboardButton(l.LocationName!) });
                     var keyboard = new ReplyKeyboardMarkup(buttons);
                     await _client.SendTextMessageAsync(message.Chat.Id, "Вибери зі списку", replyMarkup: keyboard, cancellationToken: cancellationToken);
                     return;
@@ -96,7 +96,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                     return;
                 }
 
-                var alert = alerts.FirstOrDefault(a => a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase));
+                var alert = alerts.FirstOrDefault(a => a.LocationName!.Contains(message.Text, StringComparison.OrdinalIgnoreCase));
                 if (alert is null)
                 {
                     await _client.SendTextMessageAsync(message.Chat.Id, "Не знайдено :с", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
