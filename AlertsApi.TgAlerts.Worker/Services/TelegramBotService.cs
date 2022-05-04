@@ -63,8 +63,8 @@ namespace AlertsApi.TgAlerts.Worker.Services
 
                 if (message.Text!.Equals("/start", StringComparison.OrdinalIgnoreCase))
                 {
-                    await _client.SendTextMessageAsync(message.Chat.Id, "Привіт друже! Я можу повідомляти тебе кожного разу, коли ставатиме небезечно бути не в укритті :з", cancellationToken: cancellationToken);
-                    await _client.SendTextMessageAsync(message.Chat.Id, "Будьласочка не нехтуй правилами безбеки, або я буду сумувати 😿", cancellationToken: cancellationToken);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Привіт друже! Я можу повідомляти тебе кожного разу, коли ставатиме небезпечно бути поза укриттям :з", cancellationToken: cancellationToken);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Будь-ласочка не нехтуй правилами безпеки, бо я буду сумувати 😿", cancellationToken: cancellationToken);
                     await _client.SendTextMessageAsync(message.Chat.Id, "Надішли мені назву міста чи області де ти хочеш слідкувати за повітряною тривогою. Ммурь ^-^", cancellationToken: cancellationToken);
                     return;
                 }
