@@ -5,6 +5,7 @@ namespace AlertsApi.Domain.Repositories;
 public interface ISubscriptionsRepository
 {
     Task<IEnumerable<Subscription>> GetAllAsync(int? limit = null);
+    Task<IEnumerable<Subscription>> GetAllByUserAsync(long userId);
     Task<Subscription?> GetAsync(long userId, string hashTag);
     Task<Subscription?> GetByIdAsync(int id);
     Task AddAsync(Subscription subscription);

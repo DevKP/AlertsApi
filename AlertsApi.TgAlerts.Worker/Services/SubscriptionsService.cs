@@ -22,6 +22,11 @@ public class SubscriptionsService : ISubscriptionsService
         return await _subscriptionsRepository.GetAsync(userId, hashTag);
     }
 
+    public async Task<IEnumerable<Subscription>> GetUserSubscriptionsAsync(long userId)
+    {
+        return await _subscriptionsRepository.GetAllByUserAsync(userId);
+    }
+
     public async Task<IEnumerable<Subscription>> GetSubscriptionsByHashTagAsync(string hashTag)
     {
         return await _subscriptionsRepository.GetByHashTagAsync(hashTag);

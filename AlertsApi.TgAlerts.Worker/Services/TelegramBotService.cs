@@ -69,7 +69,15 @@ namespace AlertsApi.TgAlerts.Worker.Services
                     return;
                 }
 
-                var alerts = await _alertRepository.GetAllAlertsAsync();
+                if (message.Text!.Equals("/subscriptions", StringComparison.OrdinalIgnoreCase))
+                {
+                    var subscriptions = await _subscriptionsService.GetUserSubscriptionsAsync(message.Chat.Id);
+                    var list = subscriptions.Select(sub => sub.Alert?.LocationName).ToArray();
+                    await _client.SendTextMessageAsync(message.Chat.Id, string.Join('\n', list), cancellationToken: cancellationToken);
+                    return;
+                }
+
+                var alerts = (await _alertRepository.GetAllAlertsAsync()).ToList();
                 var locations = alerts.Where(a =>
                     a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase)).ToList();
 
@@ -77,7 +85,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                 {
                     var buttons = locations.Select(l => new[] { new KeyboardButton(l.LocationHashTag) });
                     var keyboard = new ReplyKeyboardMarkup(buttons);
-                    await _client.SendTextMessageAsync(message.Chat.Id, "Виберіть зі списку", replyMarkup: keyboard, cancellationToken: cancellationToken);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Вибери зі списку", replyMarkup: keyboard, cancellationToken: cancellationToken);
                     return;
                 }
 
@@ -91,7 +99,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                 var alert = alerts.FirstOrDefault(a => a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase));
                 if (alert is null)
                 {
-                    await _client.SendTextMessageAsync(message.Chat.Id, "Не знайдено.", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Не знайдено :с", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
                     return;
                 }
 

@@ -20,6 +20,11 @@ public class SubscriptionsRepository : ISubscriptionsRepository
         return await _alertDbContext.Subscriptions!.AsNoTracking().ToListAsync();
     }
 
+    public async Task<IEnumerable<Subscription>> GetAllByUserAsync(long userId)
+    {
+        return await _alertDbContext.Subscriptions!.AsNoTracking().Where(sub => sub.UserId == userId).ToListAsync();
+    }
+
     public async Task<Subscription?> GetAsync(long userId, string hashTag)
     {
         return await _alertDbContext.Subscriptions!.AsNoTracking()
