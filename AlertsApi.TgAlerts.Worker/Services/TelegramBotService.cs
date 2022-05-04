@@ -61,6 +61,14 @@ namespace AlertsApi.TgAlerts.Worker.Services
                     return;
                 }
 
+                if (message.Text!.Equals("/start", StringComparison.OrdinalIgnoreCase))
+                {
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Привіт друже! Я можу повідомляти тебе кожного разу, коли ставатиме небезечно бути не в укритті :з", cancellationToken: cancellationToken);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Будьласочка не нехтуй правилами безбеки, або я буду сумувати 😿", cancellationToken: cancellationToken);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Надішли мені назву міста чи області де ти хочеш слідкувати за повітряною тривогою. Ммурь ^-^", cancellationToken: cancellationToken);
+                    return;
+                }
+
                 var locations = _alerts.Where(a =>
                     a.LocationHashTag!.Contains(message.Text, StringComparison.OrdinalIgnoreCase)).ToList();
 
