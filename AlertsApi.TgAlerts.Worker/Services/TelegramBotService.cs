@@ -77,6 +77,13 @@ namespace AlertsApi.TgAlerts.Worker.Services
                     return;
                 }
 
+                if (message.Text!.Equals("/unsubscribeall", StringComparison.OrdinalIgnoreCase))
+                {
+                    await _subscriptionsService.RemoveAllUserSubscriptionsAsync(message.Chat.Id);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Ти не будеш отримувати сповіщення.", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
+                    return;
+                }
+
                 var alerts = (await _alertRepository.GetAllAlertsAsync()).ToList();
                 var locations = alerts.Where(a =>
                     a.LocationName!.Contains(message.Text, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -112,7 +119,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                 await _subscriptionsService.SubscribeUserAsync(message.Chat.Id, alert.LocationHashTag);
 
                 _logger.LogInformation($"User {message.Chat.Id} subscribed to {alert.LocationHashTag}");
-                await _client.SendTextMessageAsync(message.Chat.Id, $"Коли буде тривога у {alert.LocationHashTag}, я обов'язково повідомлю!", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
+                await _client.SendTextMessageAsync(message.Chat.Id, $"Коли буде тривога у {alert.LocationName}, я обов'язково повідомлю!", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
             }, (client, exc, token) => {  });
 
         }
