@@ -2,6 +2,7 @@
 using AlertsApi.Domain.Queries;
 using AlertsApi.Domain.Repositories;
 using AlertsApi.Infrastructure.Db;
+using AlertsApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlertsApi.Infrastructure.Repositories;
@@ -19,6 +20,7 @@ public class AlertRepository : IAlertRepository
     {
         await _dbContext.Alerts!.AddAsync(alert);
         await _dbContext.SaveChangesAsync();
+        _dbContext.DetachEntry(alert);
     }
 
     public async Task<IEnumerable<Alert>> GetAllAlertsAsync()
@@ -55,51 +57,34 @@ public class AlertRepository : IAlertRepository
 
     public async Task<Alert?> GetAlertAsync(int id)
     {
-        return await _dbContext.Alerts!.FindAsync(id);
+        return await _dbContext.Alerts!.AsNoTracking().FirstOrDefaultAsync(alert => alert.Id == id);
     }
 
-    public async Task<Alert?> GetAlertByLocationAsync(string location)
+    public async Task<Alert?> GetAlertByHashTagAsync(string hashTag)
     {
-        return await _dbContext.Alerts!.FindAsync(location);
+        return await _dbContext.Alerts!.AsNoTracking().FirstOrDefaultAsync(alert => alert.LocationHashTag == hashTag);
     }
-    
+
     public async Task UpdateAlertAsync(Alert alert)
     {
-        // var alertDb = await _dbContext.Alerts!.FindAsync(alert.LocationName);
-        // if (alertDb is not null)
-        // {
-        //     // alertDb.Active = alert.Active;
-        //     // alertDb.StartTime = alert.StartTime;
-        //     // alertDb.EndTime = alert.EndTime;
-        //     // alertDb.UsersNotified = alert.UsersNotified;
         _dbContext.Alerts!.Update(alert);
         await _dbContext.SaveChangesAsync();
-         _dbContext.Entry(alert).State = EntityState.Detached;
-        // }
-        // else
-        // {
-        //     await _dbContext.Alerts.AddAsync(alert);
-        //     await _dbContext.SaveChangesAsync();
-        // }
+        _dbContext.Entry(alert).State = EntityState.Detached;
     }
 
-    public async Task DeleteAlertAsync(string location)
-    {
-        if (!await _dbContext.Alerts!.AnyAsync(a => a.LocationName == location))
-        {
-            _dbContext.Remove(new Alert() { LocationName = location });
-            await _dbContext.SaveChangesAsync();
-        }
-    }
-
-    public Task DeleteAlertByLocation(string location)
+    public Task DeleteAlertAsync(string hashTag)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<bool> IsAlertExits(string location)
+    public Task DeleteAlertByLocation(string hashTag)
     {
-        return await _dbContext.Alerts!.AnyAsync(a => a.LocationName == location);
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> IsAlertExits(string hashTag)
+    {
+        return await _dbContext.Alerts!.AnyAsync(a => a.LocationHashTag == hashTag);
     }
 
     public async Task<IEnumerable<Alert>> GetNotNotifiedAsync()

@@ -9,7 +9,7 @@ namespace AlertsApi.Api.AutoMapper
         public MappingProfile()
         {
             CreateMap<Alert, AlertResponse>()
-                .ForMember(dest => dest.LocationTitle, opt => opt.MapFrom(src => LocationMappingFunction(src)))
+                .ForMember(dest => dest.LocationTitle, opt => opt.MapFrom(src => src.LocationName))
                 .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => src.StartTime))
                 .ForMember(dest => dest.EndedAt, opt => opt.MapFrom(src => src.EndTime))
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(srs => DurationMappingFunction(srs)))
@@ -18,18 +18,6 @@ namespace AlertsApi.Api.AutoMapper
 
             CreateMap<IEnumerable<Alert>, AlertsResponse>()
                 .ForMember(dest => dest.Alerts, opt => opt.MapFrom(src => src.ToList()));
-        }
-
-
-        //Костыль для добавления точки перед аббревиатурой города
-        private static string LocationMappingFunction(Alert alert)
-        {
-            if (alert.LocationName!.StartsWith("м "))
-            {
-                return alert.LocationName.Replace("м ", "м. ");
-            }
-            
-            return alert.LocationName!;
         }
 
         private static TimeSpan? DurationMappingFunction(Alert alert)

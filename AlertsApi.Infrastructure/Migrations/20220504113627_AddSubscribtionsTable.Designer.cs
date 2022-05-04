@@ -3,6 +3,7 @@ using System;
 using AlertsApi.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AlertsApi.Infrastructure.Migrations
 {
     [DbContext(typeof(AlertDbContext))]
-    partial class AlertDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220504113627_AddSubscribtionsTable")]
+    partial class AddSubscribtionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +26,7 @@ namespace AlertsApi.Infrastructure.Migrations
 
             modelBuilder.Entity("AlertsApi.Domain.Entities.Alert", b =>
                 {
-                    b.Property<string>("LocationHashTag")
+                    b.Property<string>("LocationName")
                         .HasColumnType("text");
 
                     b.Property<bool>("Active")
@@ -39,9 +41,6 @@ namespace AlertsApi.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("LocationName")
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -52,7 +51,7 @@ namespace AlertsApi.Infrastructure.Migrations
                     b.Property<bool>("UsersNotified")
                         .HasColumnType("boolean");
 
-                    b.HasKey("LocationHashTag");
+                    b.HasKey("LocationName");
 
                     b.ToTable("Alerts");
                 });
@@ -87,8 +86,7 @@ namespace AlertsApi.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AlertHashTag")
-                        .IsRequired()
+                    b.Property<string>("AlertLocationName")
                         .HasColumnType("text");
 
                     b.Property<long>("UserId")
@@ -96,7 +94,7 @@ namespace AlertsApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AlertHashTag");
+                    b.HasIndex("AlertLocationName");
 
                     b.ToTable("Subscriptions");
                 });
@@ -105,9 +103,7 @@ namespace AlertsApi.Infrastructure.Migrations
                 {
                     b.HasOne("AlertsApi.Domain.Entities.Alert", "Alert")
                         .WithMany("Subscriptions")
-                        .HasForeignKey("AlertHashTag")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AlertLocationName");
 
                     b.Navigation("Alert");
                 });

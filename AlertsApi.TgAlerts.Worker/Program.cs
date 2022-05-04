@@ -44,6 +44,8 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddTransient<IAlertRepository, AlertRepository>();
         services.AddTransient<IMessageRepository, MessageRepository>();
+        services.AddTransient<ISubscriptionsRepository, SubscriptionsRepository>();
+        services.AddTransient<ISubscriptionsService, SubscriptionsService>();
         services.AddTransient<IAlertsService, AlertsService>();
         services.AddTransient<IMessagesParserService, MessagesParserService>();
 

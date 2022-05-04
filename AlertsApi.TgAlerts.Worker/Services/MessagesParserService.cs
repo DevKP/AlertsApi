@@ -22,6 +22,7 @@ class MessagesParserService : IMessagesParserService
             var alert = new TgAlert
             {
                 LocationTitle = location,
+                LocationHashTag = locationHashTag,
                 FetchedAt = message.Date,
                 Active = alertState,
                 OriginalMessage = message.message
@@ -44,6 +45,12 @@ class MessagesParserService : IMessagesParserService
 
     private static string FormatLocationTag(string locationTag)
     {
-        return locationTag.Trim().Replace('_', ' ');
+        var formattedLocationTag = locationTag.Trim().Replace('_', ' ');
+        if (formattedLocationTag.StartsWith("м "))
+        {
+            return formattedLocationTag.Replace("м ", "м. ");
+        }
+
+        return formattedLocationTag;
     }
 }

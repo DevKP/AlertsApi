@@ -24,7 +24,7 @@ class AlertsService : IAlertsService
         foreach (var alert in alerts)
         {
             // If alert doesn't exist, create it
-            var dbAlert = await _alertRepository.GetAlertByLocationAsync(alert.LocationTitle!);
+            var dbAlert = await _alertRepository.GetAlertByHashTagAsync(alert.LocationHashTag!);
             if (dbAlert is null)
             {
                 var alertEntity = _mapper.Map<TgAlert, Alert>(alert);
@@ -43,7 +43,7 @@ class AlertsService : IAlertsService
                 await _alertRepository.CreateAlertAsync(alertEntity);
 
                 _logger.LogInformation("New location. Location: {Location}, State: {State}",
-                    alertEntity.LocationName, alertEntity.Active);
+                    alertEntity.LocationHashTag, alertEntity.Active);
 
                 continue;
             }
@@ -56,7 +56,7 @@ class AlertsService : IAlertsService
                 await _alertRepository.UpdateAlertAsync(dbAlert);
 
                 _logger.LogInformation("Alert state changed. Location: {Location}, State: {State}",
-                    dbAlert.LocationName, dbAlert.Active);
+                    dbAlert.LocationHashTag, dbAlert.Active);
             }
         }
 
@@ -87,6 +87,7 @@ class AlertsService : IAlertsService
         return false;
     }
     
+    //plz fix
     private static bool ActivateAlert(Alert dbAlert, TgAlert alert)
     {
         var changed = false;

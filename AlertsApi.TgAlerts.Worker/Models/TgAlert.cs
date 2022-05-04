@@ -6,6 +6,8 @@ namespace AlertsApi.TgAlerts.Worker.Models
     {
         public bool Active { get; set; }
 
+        public string? LocationHashTag { get; set; }
+        
         [JsonPropertyName("location_title")]
         public string? LocationTitle { get; set; }
 

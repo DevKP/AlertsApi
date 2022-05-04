@@ -8,12 +8,15 @@ public class AlertsConfiguration : IEntityTypeConfiguration<Alert>
 {
     public void Configure(EntityTypeBuilder<Alert> builder)
     {
-        builder.HasKey(alert => alert.LocationName);
+        builder.HasKey(alert => alert.LocationHashTag);
         builder.Property(alert => alert.Id).ValueGeneratedOnAdd();
         builder.Property(alert => alert.StartTime);
         builder.Property(alert => alert.EndTime);
         builder.Property(alert => alert.UpdateTime).IsRequired();
         builder.Property(alert => alert.Active).IsRequired();
         builder.Property(alert => alert.UsersNotified).IsRequired();
+        builder.HasMany(alert => alert.Subscriptions)
+            .WithOne(subscription => subscription.Alert)
+            .HasForeignKey(subscription => subscription.AlertHashTag);
     }
 }

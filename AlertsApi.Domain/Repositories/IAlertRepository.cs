@@ -11,9 +11,9 @@ public interface IAlertRepository
     Task<IEnumerable<Alert>> GetNotNotifiedAsync();
     Task<IEnumerable<Alert>> GetQueryAsync(AlertsQuery query);
     Task<Alert?> GetAlertAsync(int id);
-    Task<Alert?> GetAlertByLocationAsync(string location);
+    Task<Alert?> GetAlertByHashTagAsync(string hashTag);
     Task UpdateAlertAsync(Alert alert);
-    Task DeleteAlertAsync(string location);
-    Task DeleteAlertByLocation(string location);
-    Task<bool> IsAlertExits(string location);
+    Task DeleteAlertAsync(string hashTag);
+    Task DeleteAlertByLocation(string hashTag);
+    Task<bool> IsAlertExits(string hashTag);
 }

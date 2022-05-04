@@ -34,14 +34,14 @@ public class NotificationsService : BackgroundService
 
             foreach (var alert in alertsToNotify)
             {
-                _logger.LogInformation($"Sending notifications about {alert.LocationName}");
-                await _botService.Notify(alert.LocationName!, $"{alert.LocationName}: {alert.Active}");
+                _logger.LogInformation($"Sending notifications about {alert.LocationHashTag}");
+                await _botService.Notify(alert.LocationHashTag!, alert);
 
                 alert.UsersNotified = true;
                 await _alertRepository.UpdateAlertAsync(alert);
             }
 
-            await Task.Delay(3000, stoppingToken);
+            await Task.Delay(6000, stoppingToken);
         }
     }
 }

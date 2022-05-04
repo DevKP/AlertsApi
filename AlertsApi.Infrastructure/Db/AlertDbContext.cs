@@ -8,11 +8,12 @@ public class AlertDbContext : DbContext
 {
     public virtual DbSet<Alert>? Alerts { get; set; }
     public virtual DbSet<DbMessage>? Message { get; set; }
+    public virtual DbSet<Subscription>? Subscriptions { get; set; }
 
     public AlertDbContext(DbContextOptions<AlertDbContext> options) : base(options)
     {
-        this.ChangeTracker.AutoDetectChangesEnabled = false;
-        Database.EnsureCreated();
+        // this.ChangeTracker.AutoDetectChangesEnabled = false;
+        //Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,7 +22,6 @@ public class AlertDbContext : DbContext
 
         modelBuilder.ApplyConfiguration(new AlertsConfiguration());
         modelBuilder.ApplyConfiguration(new MessagesConfiguration());
-        //modelBuilder.Entity<Alert>().HasData(new Alert()
-        //    {Id = 1, LocationName = "Kyiv", Active = true, UpdateTime = DateTime.Now});
+        modelBuilder.ApplyConfiguration(new SubscriptionsConfiguration());
     }
 }
