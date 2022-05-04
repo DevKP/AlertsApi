@@ -8,7 +8,7 @@ class MessagesParserService : IMessagesParserService
 {
     private readonly string[] _alertOffKeywords = {"🟢", "🟡"};
     private readonly Regex _locationHashTagRegex = new("#(?<location>[\\w_]+)", RegexOptions.Compiled | RegexOptions.Singleline);
-    private readonly Regex _locationNameRegex = new("в (?<location>[\\w\\s-]+)$", RegexOptions.Multiline | RegexOptions.Compiled);
+    private readonly Regex _locationNameRegex = new("в (?<location>[\\w \\-\\.\\']+)$", RegexOptions.Multiline | RegexOptions.Compiled);
 
     public IEnumerable<TgAlert> ParseMessages(IEnumerable<Message> messages)
     {
@@ -47,7 +47,7 @@ class MessagesParserService : IMessagesParserService
     public string GetLocationName(string message)
     {
         var match = _locationNameRegex.Match(message);
-        return match.Success ? match.Groups["location"].Value : string.Empty;
+        return match.Success ? match.Groups["location"].Value.TrimEnd('.') : string.Empty;
     }
 
     private static string FormatLocationTag(string locationTag)
