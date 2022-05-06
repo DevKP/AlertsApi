@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.TgAlerts.Console"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlertsApi.TgAlerts.Worker", "AlertsApi.TgAlerts.Worker\AlertsApi.TgAlerts.Worker.csproj", "{42819E74-12C8-40DA-BD74-E7B5218DEC5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.TgAlerts.Worker.UnitTests", "AlertsApi.TgAlerts.Worker.UnitTests\AlertsApi.TgAlerts.Worker.UnitTests.csproj", "{AA2DFD01-D97A-4D64-ABA4-E2462D294508}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertsApi.Api.UnitTests", "AlertsApi.Api.UnitTests\AlertsApi.Api.UnitTests.csproj", "{33CC1EE4-3249-4387-B1A4-2642845BFB59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{42819E74-12C8-40DA-BD74-E7B5218DEC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42819E74-12C8-40DA-BD74-E7B5218DEC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42819E74-12C8-40DA-BD74-E7B5218DEC5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA2DFD01-D97A-4D64-ABA4-E2462D294508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA2DFD01-D97A-4D64-ABA4-E2462D294508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA2DFD01-D97A-4D64-ABA4-E2462D294508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA2DFD01-D97A-4D64-ABA4-E2462D294508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33CC1EE4-3249-4387-B1A4-2642845BFB59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33CC1EE4-3249-4387-B1A4-2642845BFB59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33CC1EE4-3249-4387-B1A4-2642845BFB59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33CC1EE4-3249-4387-B1A4-2642845BFB59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

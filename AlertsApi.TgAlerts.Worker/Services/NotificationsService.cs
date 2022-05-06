@@ -21,7 +21,7 @@ public class NotificationsService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Starting telegram bot notifier.");
-        await _botService.Start();
+        _botService.Start();
 
         await MonitorAlertsStateChangesAsync(stoppingToken);
     }

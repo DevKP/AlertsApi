@@ -14,8 +14,6 @@ namespace AlertsApi.TgAlerts.Worker.Services
         private readonly IAlertRepository _alertRepository;
         private readonly ILogger _logger;
 
-        private List<Alert> _alerts;
-
         public TelegramBotService(ILogger<TelegramBotService> logger, IAlertRepository alertRepository,
             ISubscriptionsService subscriptionsService)
         {
@@ -45,9 +43,8 @@ namespace AlertsApi.TgAlerts.Worker.Services
             }
         }
 
-        public async Task Start()
+        public void Start()
         {
-            _alerts = (await _alertRepository.GetAllAlertsAsync()).ToList();
             _client.StartReceiving(async (client, update, cancellationToken) =>
             {
                 if (update.Type != UpdateType.Message)

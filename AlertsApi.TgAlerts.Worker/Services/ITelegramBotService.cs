@@ -11,6 +11,6 @@ namespace AlertsApi.TgAlerts.Worker.Services
     public interface ITelegramBotService
     {
         Task Notify(string locationHashTag, Alert alert);
-        Task Start();
+        void Start();
     }
 }

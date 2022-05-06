@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AlertsApi.TgAlerts.Worker.Services;
 
-class AlertsService : IAlertsService
+public class AlertsService : IAlertsService
 {
     private readonly IAlertRepository _alertRepository;
     private readonly ILogger<AlertsService> _logger;
@@ -87,26 +87,21 @@ class AlertsService : IAlertsService
         return false;
     }
     
-    //plz fix
     private static bool ActivateAlert(Alert dbAlert, TgAlert alert)
     {
         var changed = false;
-        if (dbAlert.StartTime is null ||
-            dbAlert.StartTime < alert.FetchedAt)
+        if (dbAlert.StartTime is null || dbAlert.StartTime < alert.FetchedAt)
         {
             dbAlert.StartTime = alert.FetchedAt;
             changed = true;
         }
 
-        if (dbAlert.EndTime is not null &&
-            dbAlert.StartTime > dbAlert.EndTime)
+        if (dbAlert.EndTime is not null && dbAlert.EndTime < dbAlert.StartTime)
         {
             dbAlert.EndTime = null;
+            dbAlert.Active = true;
             changed = true;
         }
-
-        if(changed)
-            dbAlert.Active = true;
 
         return changed;
     }

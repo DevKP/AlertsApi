@@ -4,7 +4,7 @@ using TL;
 
 namespace AlertsApi.TgAlerts.Worker.Services;
 
-class MessagesParserService : IMessagesParserService
+public class MessagesParserService : IMessagesParserService
 {
     private readonly string[] _alertOffKeywords = {"🟢", "🟡"};
     private readonly Regex _locationHashTagRegex = new("#(?<location>[\\w_]+)", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -33,31 +33,20 @@ class MessagesParserService : IMessagesParserService
         }
     }
 
-    public bool IsAlertOn(string message)
+    private bool IsAlertOn(string message)
     {
         return !_alertOffKeywords.Any(keyword => message.Contains(keyword, StringComparison.OrdinalIgnoreCase));
     }
 
-    public string GetLocation(string message)
+    private string GetLocation(string message)
     {
         var match = _locationHashTagRegex.Match(message);
         return match.Success ? match.Groups["location"].Value : string.Empty;
     }
 
-    public string GetLocationName(string message)
+    private string GetLocationName(string message)
     {
         var match = _locationNameRegex.Match(message);
         return match.Success ? match.Groups["location"].Value.TrimEnd('.') : string.Empty;
-    }
-
-    private static string FormatLocationTag(string locationTag)
-    {
-        var formattedLocationTag = locationTag.Trim().Replace('_', ' ');
-        if (formattedLocationTag.StartsWith("м "))
-        {
-            return formattedLocationTag.Replace("м ", "м. ");
-        }
-
-        return formattedLocationTag;
     }
 }
