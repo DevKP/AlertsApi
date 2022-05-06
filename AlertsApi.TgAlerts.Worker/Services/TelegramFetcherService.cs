@@ -79,11 +79,11 @@ public class TelegramFetcherService : BackgroundService
         foreach (var message in filteredMessages)
             _logger.LogInformation("New message from channel: {Message}", message.message);
 
-        var dbMessages = _mapper.Map<IEnumerable<Message>, IEnumerable<DbMessage>>(filteredMessages).ToList();
-        await _messageRepository.InsertRangeAsync(dbMessages);
-
         var alerts = _messagesParser.ParseMessages(filteredMessages);
         await _alertsService.UpdateAlertsAsync(alerts);
+
+        var dbMessages = _mapper.Map<IEnumerable<Message>, IEnumerable<DbMessage>>(filteredMessages).ToList();
+        await _messageRepository.InsertRangeAsync(dbMessages);
     }
 
     private async Task<IEnumerable<Message>> GetNewMessages(InputPeerChannel channel)
