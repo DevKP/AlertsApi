@@ -60,7 +60,10 @@ public class TelegramFetcherService : BackgroundService
             await _alertsService.UpdateAlertsAsync(alerts);
 
             var newMessagesEntities = _mapper.Map<IEnumerable<Message>, IEnumerable<DbMessage>>(newMessages);
-            await _messageRepository.InsertRangeAsync(newMessagesEntities);
+            foreach (var message in newMessagesEntities)
+            {
+                await _messageRepository.AddOrUpdateAsync(message);
+            }
 
             _logger.LogInformation("Start monitoring real time updates.");
             _client.AddMessagesListener(NewMessagesListenerAsync);
@@ -83,7 +86,10 @@ public class TelegramFetcherService : BackgroundService
         await _alertsService.UpdateAlertsAsync(alerts);
 
         var dbMessages = _mapper.Map<IEnumerable<Message>, IEnumerable<DbMessage>>(filteredMessages).ToList();
-        await _messageRepository.InsertRangeAsync(dbMessages);
+        foreach (var dbMessage in dbMessages)
+        {
+            await _messageRepository.AddOrUpdateAsync(dbMessage);
+        }
     }
 
     private async Task<IEnumerable<Message>> GetNewMessages(InputPeerChannel channel)

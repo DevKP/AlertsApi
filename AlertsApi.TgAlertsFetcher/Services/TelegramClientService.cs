@@ -104,6 +104,7 @@ public class TelegramClientService : ITelegramClientService
             .Where(update => update is UpdateNewMessage)
             .Cast<UpdateNewMessage>()
             .Select(update => update.message)
+            .Where(message => message is Message)
             .Cast<Message>();
 
         return messages;

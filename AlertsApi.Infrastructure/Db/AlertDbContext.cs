@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AlertsApi.Infrastructure.Db;
 
-public class AlertDbContext : DbContext
+public sealed class AlertDbContext : DbContext
 {
-    public virtual DbSet<Alert>? Alerts { get; set; }
-    public virtual DbSet<DbMessage>? Message { get; set; }
-    public virtual DbSet<Subscription>? Subscriptions { get; set; }
+    public DbSet<Alert>? Alerts { get; set; }
+    public DbSet<DbMessage>? Message { get; set; }
+    public DbSet<Subscription>? Subscriptions { get; set; }
 
     public AlertDbContext(DbContextOptions<AlertDbContext> options) : base(options)
     {
-        // this.ChangeTracker.AutoDetectChangesEnabled = false;
+        ChangeTracker.AutoDetectChangesEnabled = false;
         //Database.EnsureCreated();
     }
 

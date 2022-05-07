@@ -1,6 +1,7 @@
 ﻿using AlertsApi.Domain.Entities;
 using AlertsApi.Domain.Repositories;
 using AlertsApi.Infrastructure.Db;
+using AlertsApi.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlertsApi.Infrastructure.Repositories;
@@ -14,16 +15,34 @@ public class MessageRepository : IMessageRepository
         _dbContext = dbContext;
     }
 
-    public async Task InsertAsync(DbMessage message)
+    public async Task AddAsync(DbMessage message)
     {
         await _dbContext.Message!.AddAsync(message);
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task InsertRangeAsync(IEnumerable<DbMessage> messages)
+    public async Task AddOrUpdateAsync(DbMessage message)
     {
-        await _dbContext.Message!.AddRangeAsync(messages);
+        var exists = await _dbContext.Message!.AsNoTracking().AnyAsync(m => m.Id == message.Id);
+        if (exists)
+        {
+            _dbContext.Message!.Update(message);
+        }
+        else
+        {
+            await _dbContext.Message!.AddAsync(message);
+        }
+
         await _dbContext.SaveChangesAsync();
+        _dbContext.DetachEntry(message);
+    }
+
+    public async Task AddOrUpdateRangeAsync(IEnumerable<DbMessage> messages)
+    {
+        var messagesList = messages.ToList();
+        _dbContext.Message!.UpdateRange(messagesList);
+        await _dbContext.SaveChangesAsync();
+        //_dbContext.DetachEntries(messagesList);
     }
 
     public async Task<IEnumerable<DbMessage>> GetAllAsync()

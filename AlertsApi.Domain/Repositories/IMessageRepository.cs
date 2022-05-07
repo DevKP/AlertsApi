@@ -4,8 +4,9 @@ namespace AlertsApi.Domain.Repositories;
 
 public interface IMessageRepository
 {
-    Task InsertAsync(DbMessage message);
-    Task InsertRangeAsync(IEnumerable<DbMessage> message);
+    Task AddAsync(DbMessage message);
+    Task AddOrUpdateAsync(DbMessage message);
+    Task AddOrUpdateRangeAsync(IEnumerable<DbMessage> message);
     Task<IEnumerable<DbMessage>> GetAllAsync();
     Task<DbMessage?> GetById(int id);
     Task<DbMessage?> GetNewestAsync();
