@@ -51,7 +51,7 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton<ITelegramBotService, TelegramBotService>();
 
-        services.AddWTelegram(optionsBuilder =>
+        services.AddTelegramClient(optionsBuilder =>
         {
             var options = hostBuilder.Configuration.GetSection(ClientOptions.ConfigKey).Get<ClientOptions>();
             optionsBuilder
@@ -59,7 +59,7 @@ var host = Host.CreateDefaultBuilder(args)
                 .WithCustomConfig("phone_number", "+380995031137")
                 .WithCustomConfig("api_id", "19657090")
                 .WithCustomConfig("api_hash", "01d7dcd1490c1b6f89985882379ad0ab")
-                //.WithCustomConfig("server_address", "149.154.167.50:443")
+                .WithCustomConfig("server_address", "149.154.167.50:443")
                 .WithCustomConfig("device_model", "model")
                 .WithCustomConfig("system_version", "win10")
                 .WithCustomConfig("app_version", "v0.1")

@@ -8,7 +8,7 @@ namespace AlertsApi.WTelegram.Hosting;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddWTelegram(this IServiceCollection services, Action<ClientOptionsBuilder> optionsAction)
+    public static void AddTelegramClient(this IServiceCollection services, Action<ClientOptionsBuilder> optionsAction)
     {
         services.AddSingleton<ITelegramClientService, TelegramClientService>(provider =>
         {

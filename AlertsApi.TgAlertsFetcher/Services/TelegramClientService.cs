@@ -49,8 +49,8 @@ public class TelegramClientService : ITelegramClientService
 
     public async Task<IEnumerable<Message>> GetHistoryFromIdAsync(InputPeerChannel channel, int messageId)
     {
-        const int maxMessageOffset = 1000;
-        const int messageLimit = 50;
+        const int maxMessageOffset = 3000;
+        const int messageLimit = 100;
 
         var messages = new List<Message>();
         for (var offset = 0; offset < maxMessageOffset; offset += messageLimit)
