@@ -93,7 +93,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                         return;
                     }
 
-                    var list = activeAlerts.OrderBy(a => a.StartTime).Select(a => $"🔴 {a.StartTime:HH:mm} {a.LocationName}").ToArray();
+                    var list = activeAlerts.OrderByDescending(a => a.StartTime).Select(a => $"🔴 {a.StartTime:HH:mm} {a.LocationName}").ToArray();
                     await _client.SendTextMessageAsync(message.Chat.Id, $"Наразі тривога триває:\n\n{string.Join("\n", list)}", cancellationToken: cancellationToken);
                     return;
                 }
