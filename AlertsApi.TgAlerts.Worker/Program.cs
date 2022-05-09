@@ -3,6 +3,7 @@ using AlertsApi.Domain.Repositories;
 using AlertsApi.Infrastructure.Db;
 using AlertsApi.Infrastructure.Repositories;
 using AlertsApi.TgAlerts.Worker.AutoMapper;
+using AlertsApi.TgAlerts.Worker.Config;
 using AlertsApi.TgAlerts.Worker.Services;
 using AlertsApi.WTelegram.Hosting;
 using AlertsApi.WTelegram.Hosting.Options;
@@ -35,6 +36,8 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostBuilder, services) => 
     {
         services.Configure<ClientOptions>(hostBuilder.Configuration.GetSection(ClientOptions.ConfigKey));
+        services.Configure<TelegramBotOptions>(hostBuilder.Configuration.GetSection(TelegramBotOptions.ConfigKey));
+
         services.AddDbContext<AlertDbContext>(contextOptionsBuilder =>
         {
             var connection = hostBuilder.Configuration.GetConnectionString("NpgsqlConnection");

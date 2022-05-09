@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using AlertsApi.Domain.Entities;
 using AlertsApi.Domain.Repositories;
+using AlertsApi.TgAlerts.Worker.Config;
+using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -15,9 +17,11 @@ namespace AlertsApi.TgAlerts.Worker.Services
         private readonly ILogger _logger;
 
         public TelegramBotService(ILogger<TelegramBotService> logger, IAlertRepository alertRepository,
-            ISubscriptionsService subscriptionsService)
+            ISubscriptionsService subscriptionsService, IOptions<TelegramBotOptions> options)
         {
-            _client = new TelegramBotClient("5336718267:AAFQNm6oHuZMMWX1i6udAh-5kX-vA1vUbYI");
+            var botOptions = options.Value ?? throw new ArgumentNullException(nameof(options));
+
+            _client = new TelegramBotClient(botOptions.Token);
             _logger = logger;
             _alertRepository = alertRepository;
             _subscriptionsService = subscriptionsService;
@@ -80,6 +84,20 @@ namespace AlertsApi.TgAlerts.Worker.Services
                     return;
                 }
 
+                if (message.Text!.Equals("/alerts", StringComparison.OrdinalIgnoreCase))
+                {
+                    var activeAlerts = (await _alertRepository.GetOnlyActiveAsync()).ToList();
+                    if (!activeAlerts.Any())
+                    {
+                        await _client.SendTextMessageAsync(message.Chat.Id, "Немає активної тривоги. ❤️", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
+                        return;
+                    }
+
+                    var list = activeAlerts.Select(a => $"🔴 {a.StartTime:HH:mm} {a.LocationName}").ToArray();
+                    await _client.SendTextMessageAsync(message.Chat.Id, $"Наразі тривога триває:\n\n{string.Join("\n", list)}", cancellationToken: cancellationToken);
+                    return;
+                }
+
                 if (message.Text!.Equals("/unsubscribeall", StringComparison.OrdinalIgnoreCase))
                 {
                     await _subscriptionsService.RemoveAllUserSubscriptionsAsync(message.Chat.Id);
@@ -109,7 +127,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                 var alert = alerts.FirstOrDefault(a => a.LocationName!.Contains(message.Text, StringComparison.OrdinalIgnoreCase));
                 if (alert is null)
                 {
-                    await _client.SendTextMessageAsync(message.Chat.Id, "Не знайдено :с", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
+                    await _client.SendTextMessageAsync(message.Chat.Id, "Я не зміг знайти нічого у своїй базі.", replyMarkup: new ReplyKeyboardRemove(), cancellationToken: cancellationToken);
                     return;
                 }
 
