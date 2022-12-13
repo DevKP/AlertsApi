@@ -42,7 +42,7 @@ namespace AlertsApi.TgAlerts.Worker.Services
                 else
                 {
                     await _client.SendStickerAsync(subscription.UserId, "CAACAgIAAxkBAAEEoCZicpAMfHc_0DgwP2Jjcg3AWBPNjgACLRoAAruOgUmgxH0WL_Q7xCQE");
-                    await _client.SendTextMessageAsync(subscription.UserId, $"🟢 Відбій тривоги у {alert.LocationName}! Насолоджуйтесь життям :3");
+                    await _client.SendTextMessageAsync(subscription.UserId, $"🟢 Відбій тривоги у {alert.LocationName}! :3");
                 }
             }
         }
